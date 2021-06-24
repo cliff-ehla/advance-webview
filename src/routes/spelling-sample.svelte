@@ -2,7 +2,8 @@
 	import SpellGameBar from '../components/spelling/spell-game-bar.svelte'
 	import {onMount} from 'svelte'
 	import {sound} from "../components/spelling/Sound";
-	import {phases} from "../components/spelling/spell-master.svelte";
+
+	let start = false
 
 	let data = [{
 		"id": "47491",
