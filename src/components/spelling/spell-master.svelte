@@ -2,6 +2,7 @@
 	export let phases
 	export let hp
 	export let question_result
+	export let mode
 
 	import Spell from './spell2.svelte'
 	import {onMount, getContext, tick} from 'svelte'
@@ -54,5 +55,5 @@
 </script>
 
 {#if all_audio_loaded && render}
-	<Spell on:next={onNext} words={phase.words} phase_audio={phase.phase_audio} {hp} phase_idx={idx}></Spell>
+	<Spell on:next={onNext} words={phase.words} phase_audio={phase.phase_audio} {hp} phase_idx={idx} {mode}></Spell>
 {/if}

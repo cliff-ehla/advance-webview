@@ -83,7 +83,7 @@
 
 <svelte:window on:click={() => start = true} on:touchstart={() => start = true}/>
 {#if start}
-	<SpellGameBar phases={phases} mode="normal"/>
+	<SpellGameBar phases={phases} mode="easy"/>
 {:else}
 	<div class="w-screen h-screen flex items-center justify-center">
 		<div class="text-center">

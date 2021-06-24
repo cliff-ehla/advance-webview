@@ -157,13 +157,17 @@
 		</div>
 		<div class="flex-1">
 			<div class="flex justify-center items-center">
-				{#each [...Array(question_count).keys()] as p, i}
-					<div class="relative w-8 mx-1">
-						<img bind:this={star_broken_els[i]} src="/image/spelling/star-broken.png" alt="placeholder" class="absolute top-0 left-0">
-						<img bind:this={star_holder_els[i]} src="/image/spelling/star-placeholder.png" alt="placeholder">
-						<img bind:this={star_els[i]} src="/image/spelling/star.png" alt="placeholder" class="absolute top-0 left-0">
-					</div>
-				{/each}
+				{#if mode === 'normal'}
+					{#each [...Array(question_count).keys()] as p, i}
+						<div class="relative w-8 mx-1">
+							<img bind:this={star_broken_els[i]} src="/image/spelling/star-broken.png" alt="placeholder" class="absolute top-0 left-0">
+							<img bind:this={star_holder_els[i]} src="/image/spelling/star-placeholder.png" alt="placeholder">
+							<img bind:this={star_els[i]} src="/image/spelling/star.png" alt="placeholder" class="absolute top-0 left-0">
+						</div>
+					{/each}
+				{:else if mode === 'easy'}
+					bar
+				{/if}
 			</div>
 		</div>
 		<div class="w-28 flex justify-end">
@@ -182,7 +186,7 @@
 		</div>
 	</div>
 	<div class="relative z-10">
-		<SpellMaster {phases} {hp} {question_result}/>
+		<SpellMaster {phases} {hp} {mode} {question_result}/>
 	</div>
 
 	<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 202" fill="none" xmlns="http://www.w3.org/2000/svg">

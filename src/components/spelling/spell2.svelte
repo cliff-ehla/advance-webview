@@ -10,7 +10,7 @@
 	export let phase_audio
 	export let hp
 	export let phase_idx
-	export let mode = 'normal' // normal or easy
+	export let mode
 
 	const {lessHeart, setCheckpointActive, setCheckpointDanger, setCheckpointFail, setCheckpointSuccess} = getContext('spell-game-bar')
 	const dispatch  = createEventDispatcher()
@@ -48,14 +48,18 @@
 			moveToChain(e.target, async () => {
 				addNextBenchCharToStage()
 				if (mode === 'easy') {
-					if (verifyChar(char) === 0) {
-						sound.play('stone-hit')
-						let _stage_idx = e.target.getAttribute('data-stage-idx')
-						moveToChain(e.target, () => {
-							moveToStage(e.target, _stage_idx, () => {
+					if (getToBeVerifyCharCount() === 3) {
+						const is_correct = verifyToBeVerifyWord()
+						if (is_correct) {
+							getToBeVerifyChars().forEach(el => {
+								el.setAttribute('data-to-be-verify', '-1')
+							})
+							sound.play('bonus-earned')
+						} else {
+							moveChainCharsToStage(getToBeVerifyChars(), () => {
 								word_introduction(word_index)
 							})
-						})
+						}
 					}
 				} else if (mode === 'normal') {
 					if (isAllCharAnimatedToStage()) {
@@ -123,7 +127,7 @@
 			x: "-=20",
 			duration: 0.1,
 			onComplete: () => {
-				moveChainCharsToStage(setTimeout(cb, 800))
+				moveChainCharsToStage(char_els[word_index], setTimeout(cb, 800))
 			}
 		})
 	}
@@ -178,8 +182,12 @@
 		return this_round_chars_els.every(el => el.getAttribute('data-correct') === '1')
 	}
 
-	const moveChainCharsToStage = (cb) => {
-		let this_round_chars_els = char_els[word_index]
+	const verifyToBeVerifyWord = () => {
+		return getToBeVerifyChars().every(el => el.getAttribute('data-correct') === '1')
+	}
+
+	const moveChainCharsToStage = (els, cb) => {
+		let this_round_chars_els = els
 		sound.play('sci-fi-laser')
 		this_round_chars_els.forEach((el, i) => {
 			const idx = pickRandom(getEmptyStageIdx())
@@ -261,6 +269,9 @@
 		el.setAttribute('data-chain-idx', char_index)
 		el.setAttribute('data-location', 'chain')
 		el.setAttribute('data-correct', is_correct)
+		if (mode === 'easy') {
+			el.setAttribute('data-to-be-verify', '1')
+		}
 		updateCharIdx()
 		burstBubble(stage_idx)
 	}
@@ -333,6 +344,16 @@
 	const isAllCharAnimatedToStage = () => {
 		let _char_els = char_els[word_index]
 		return _char_els.every(el => el.getAttribute("data-animated-to-stage") === "1")
+	}
+
+	const getToBeVerifyCharCount = () => {
+		let _char_els = char_els[word_index]
+		return _char_els.filter(el => el.getAttribute("data-animated-to-stage") === "1" && el.getAttribute("data-to-be-verify") === "1").length
+	}
+
+	const getToBeVerifyChars = () => {
+		let _char_els = char_els[word_index]
+		return _char_els.filter(el => el.getAttribute("data-animated-to-stage") === "1" && el.getAttribute("data-to-be-verify") === "1")
 	}
 
 	/*
@@ -462,12 +483,18 @@
 					if (words_2.length > 1) {
 						word_introduction(word_index, () => {
 							prepareStage(word_index)
-							setCheckpointActive(phase_idx)
+							if (mode === 'normal') {
+								setCheckpointActive(phase_idx)
+							}
 						})
 					} else {
-						setCheckpointActive(phase_idx, () => {
+						if (mode === 'normal') {
+							setCheckpointActive(phase_idx, () => {
+								prepareStage(word_index)
+							})
+						} else {
 							prepareStage(word_index)
-						})
+						}
 					}
 				})
 			}
