@@ -5,7 +5,7 @@
 
 	import Spell from './spell2.svelte'
 	import {onMount, getContext, tick} from 'svelte'
-	import {sound} from "./core/Sound";
+	import {sound} from "./Sound";
 
 	let render = false
 	let all_audio_loaded = false

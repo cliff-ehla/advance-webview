@@ -1,8 +1,8 @@
 <script>
 	import {onMount, setContext} from 'svelte'
 	import gsap from 'gsap'
-	import Icon from './icon.svelte'
-	import {sound} from "./core/Sound";
+	import Icon from '../icon.svelte'
+	import {sound} from "./Sound";
 	import SpellMaster from './spell-master.svelte'
 
 	export let mode
@@ -152,9 +152,9 @@
 			<div class="flex justify-center items-center">
 				{#each [...Array(question_count).keys()] as p, i}
 					<div class="relative w-8 mx-1">
-						<img bind:this={star_broken_els[i]} src="/star-broken.png" alt="placeholder" class="absolute top-0 left-0">
-						<img bind:this={star_holder_els[i]} src="/star-placeholder.png" alt="placeholder">
-						<img bind:this={star_els[i]} src="/star.png" alt="placeholder" class="absolute top-0 left-0">
+						<img bind:this={star_broken_els[i]} src="/image/spelling/star-broken.png" alt="placeholder" class="absolute top-0 left-0">
+						<img bind:this={star_holder_els[i]} src="/image/spelling/star-placeholder.png" alt="placeholder">
+						<img bind:this={star_els[i]} src="/image/spelling/star.png" alt="placeholder" class="absolute top-0 left-0">
 					</div>
 				{/each}
 			</div>

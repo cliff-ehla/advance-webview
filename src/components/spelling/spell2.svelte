@@ -4,7 +4,7 @@
 	import {getDiff, getDiff2} from "./utils";
 	import gsap from "gsap";
 	import Alphabet from './alphabet.svelte'
-	import {sound} from "./core/Sound";
+	import {sound} from "./Sound";
 
 	export let words
 	export let phase_audio
