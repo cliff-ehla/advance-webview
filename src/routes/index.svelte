@@ -3,5 +3,5 @@
 </script>
 
 <a class="p-4 block" href="/spelling-sample">Sample</a>
-<a class="p-4 block" href="/spelling">Spelling</a>
-<a class="p-4 block hidden" href="/spelling{query}">no query</a>
+<a class="p-4 block hidden" href="/spelling">Spelling</a>
+<a class="p-4 block" href="/spelling{query}">no query</a>

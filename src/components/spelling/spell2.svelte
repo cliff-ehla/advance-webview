@@ -47,9 +47,6 @@
 			sound.play('ball-tap')
 			moveToChain(e.target, async () => {
 				addNextBenchCharToStage()
-				await tick()
-				updateCharIdx()
-
 				if (mode === 'easy') {
 					if (verifyChar(char) === 0) {
 						sound.play('stone-hit')
@@ -61,7 +58,7 @@
 						})
 					}
 				} else if (mode === 'normal') {
-					if (!char_index) {
+					if (isAllCharAnimatedToStage()) {
 						const is_correct = verifyWord()
 						if (is_correct) {
 							if (word_index < words_2.length - 1) {
@@ -89,7 +86,9 @@
 				}
 
 				if (char_index === words_2[word_index].chain_chars_count - 1) {
-					if (!user_know_how_to_backspace) shakeWrongChars()
+					if (!user_know_how_to_backspace) {
+						// shakeWrongChars()
+					}
 				}
 			})
 		} else if (location === 'chain') {
@@ -108,7 +107,7 @@
 		then play and vocab audio
 	*/
 	const shakeChain = (cb) => {
-		sound.play('flute-alert')
+		sound.play('flute-alert-short')
 		chain_broken = true
 		let el = chain_els[word_index]
 		gsap.timeline().to(el, {
@@ -124,8 +123,7 @@
 			x: "-=20",
 			duration: 0.1,
 			onComplete: () => {
-				moveChainCharsToStage()
-				cb()
+				moveChainCharsToStage(setTimeout(cb, 800))
 			}
 		})
 	}
@@ -254,12 +252,16 @@
 
 	const moveToChain = (el, cb) => {
 		const is_correct = verifyChar(el.getAttribute('data-char'))
-		moveCharTo(el, chain_els[word_index][char_index], cb)
+		moveCharTo(el, chain_els[word_index][char_index], () => {
+			el.setAttribute('data-animated-to-stage', 1)
+			cb()
+		})
 		const stage_idx = el.getAttribute('data-stage-idx')
 		el.setAttribute('data-stage-idx', -1)
 		el.setAttribute('data-chain-idx', char_index)
 		el.setAttribute('data-location', 'chain')
 		el.setAttribute('data-correct', is_correct)
+		updateCharIdx()
 		burstBubble(stage_idx)
 	}
 
@@ -272,6 +274,7 @@
 		el.setAttribute('data-chain-idx', -1)
 		el.setAttribute('data-location', 'stage')
 		el.setAttribute('data-correct', -1)
+		el.setAttribute('data-animated-to-stage', -1)
 		popupBubble(stage_idx)
 	}
 
@@ -282,6 +285,7 @@
 		el.setAttribute('data-chain-idx', -1)
 		el.setAttribute('data-location', 'bench')
 		el.setAttribute('data-correct', -1)
+		el.setAttribute('data-animated-to-stage', -1)
 	}
 
 	const prepareStage = (index) => {
@@ -324,6 +328,11 @@
 		const all_chars = char_els.reduce((a,b) => [...a, ...b], [])
 		const all_chars_on_chain = all_chars.filter(el => Number(el.getAttribute("data-location") === "chain"))
 		return [...all_chain_holders, ...all_chars_on_chain, ...chain_link_els]
+	}
+
+	const isAllCharAnimatedToStage = () => {
+		let _char_els = char_els[word_index]
+		return _char_els.every(el => el.getAttribute("data-animated-to-stage") === "1")
 	}
 
 	/*
@@ -507,7 +516,8 @@
 		let chars = getChainChars()
 		chars = chars.filter(el => el.getAttribute('data-correct') === '0')
 		if (chars.length) {
-			sound.play('flute-alert-short')
+			user_know_how_to_backspace = true
+			// sound.play('flute-alert-short')
 			gsap.timeline().to(chars, {
 				x: "+=10",
 				duration: 0.1
@@ -539,7 +549,7 @@
 		} else if (code === 38) { // up
 
 		} else if (code === 40) { // down
-			shakeWrongChars()
+
 		}
 	}
 </script>
@@ -579,12 +589,13 @@
 		{#each words_2 as w,i}
 			<div class="absolute left-full bottom-0 w-24 h-24" bind:this={bench_holder_els[i]}>
 				{#each w.all_chars as c,j}
-					<div on:click={onCharClick} bind:this={char_els[i][j]}
+					<div on:touchstart={onCharClick} bind:this={char_els[i][j]}
 					     data-location="bench"
 					     data-stage-idx="-1"
 					     data-chain-idx="-1"
 					     data-char={c}
 					     data-correct="-1"
+					     data-animated-to-stage="-1"
 					     class="absolute cursor-pointer">
 						<div class="pointer-events-none">
 							<Alphabet char={c}/>
