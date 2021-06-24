@@ -148,7 +148,7 @@
 	}
 </script>
 
-<div class="bg-purple-700 relative h-screen" style="background: #3A34AB">
+<div class="bg-purple-700 relative h-screen" style="background: {mode === 'easy' ? '#59B7FF' : '#3A34AB'}">
 	<div class="z-50 relative w-full flex items-center justify-around px-2" style="height: 4em;">
 		<div class="w-28">
 			<div on:click={onPauseClick} class="cursor-pointer w-10 h-10 rounded-full bg-white bg-opacity-30 flex justify-center items-center text-white">
@@ -190,8 +190,8 @@
 	</div>
 
 	<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 202" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<ellipse cx="-47" cy="210.5" rx="340" ry="210.5" fill="#606BD6"/>
-		<ellipse cx="530.5" cy="262.5" rx="501.5" ry="229.5" fill="#424DB8"/>
-		<ellipse cx="147.5" cy="315.5" rx="501.5" ry="229.5" fill="#38549A"/>
+		<ellipse cx="-47" cy="210.5" rx="340" ry="210.5" fill="{mode === 'easy' ? '#A6D895' : '#606BD6'}"/>
+		<ellipse cx="530.5" cy="262.5" rx="501.5" ry="229.5" fill="{mode === 'easy' ? '#A6D895' : '#424DB8'}"/>
+		<ellipse cx="147.5" cy="315.5" rx="501.5" ry="229.5" fill="{mode === 'easy' ? '#98CB87' : '#38549A'}"/>
 	</svg>
 </div>

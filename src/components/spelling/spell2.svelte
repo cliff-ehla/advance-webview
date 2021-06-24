@@ -485,6 +485,8 @@
 							prepareStage(word_index)
 							if (mode === 'normal') {
 								setCheckpointActive(phase_idx)
+							} else if (mode === 'easy') {
+								highlightSteps()
 							}
 						})
 					} else {
@@ -567,6 +569,21 @@
 		}
 	}
 
+	const highlightSteps = () => {
+		let start = 0
+		let length = 3
+		const targets = chain_els[word_index].slice(start, start + length)
+		targets.forEach(el => {
+			el.setAttribute('data-step-status', 'active')
+		})
+		gsap.to(targets, {
+			background: '#F8EBBE',
+			stagger: 0.15,
+			repeat: -1,
+			yoyo: true
+		})
+	}
+
 	const onKeydown = e => {
 		const code = e.keyCode
 		if (code === 37) { // left
@@ -590,8 +607,9 @@
 				<div class="flex">
 					{#each w.all_chars as c, j}
 						<div bind:this={chain_els[i][j]}
-						     style="width: {chain_char_width}px; background-color: #6BBAF9"
-						     class="char-box h-20 bg-blue-500 mr-0.5 flex items-center justify-center">
+						     data-step-status="inactive"
+						     style="width: {chain_char_width}px; background-color: {mode === 'easy' ? '#E6F7FF' : '#6BBAF9'}"
+						     class="char-box h-20 mr-0.5 flex items-center justify-center">
 							<div bind:this={watermark_char_els[i][j]} class="pointer-events-none">
 								<Alphabet char={c} stroke_color="rgba(0,0,0,0.1)" text_color="rgba(0,0,0,0.3)"/>
 							</div>
@@ -625,7 +643,7 @@
 					     data-animated-to-stage="-1"
 					     class="absolute cursor-pointer">
 						<div class="pointer-events-none">
-							<Alphabet char={c}/>
+							<Alphabet text_color={mode === 'easy' ? '#F69CCA' : '#ED7182'} char={c}/>
 						</div>
 					</div>
 				{/each}
