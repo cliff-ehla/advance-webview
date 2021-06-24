@@ -48,13 +48,21 @@
 			moveToChain(e.target, async () => {
 				addNextBenchCharToStage()
 				if (mode === 'easy') {
-					if (getToBeVerifyCharCount() === 3) {
+					if (getToBeVerifyCharCount() === getStepLength()) {
 						const is_correct = verifyToBeVerifyWord()
 						if (is_correct) {
 							sound.play('bonus-earned')
 							completeSteps()
 							await tick()
-							highlightSteps()
+							if (getStepLength() === 0) {
+								if (word_index < words_2.length - 1) {
+									nextWord(highlightSteps)
+								} else {
+									nextPhase()
+								}
+							} else {
+								highlightSteps()
+							}
 						} else {
 							moveChainCharsToStage(getToBeVerifyChars(), () => {
 								word_introduction(word_index)
@@ -147,13 +155,13 @@
 		dispatch('next')
 	}
 
-	const nextWord = () => {
+	const nextWord = (cb) => {
 		sound.play('magic-unlock')
 		word_index++
 		char_index = 0
 		moveChainToWord(word_index, () => {
 			word_introduction(word_index, () => {
-				prepareStage(word_index)
+				prepareStage(cb)
 			})
 		})
 	}
@@ -299,12 +307,16 @@
 		el.setAttribute('data-animated-to-stage', -1)
 	}
 
-	const prepareStage = (index) => {
+	const prepareStage = (cb) => {
 		let word_char_els = getEssentialCharElFromBench()
 		word_char_els.forEach((el,i) => {
 			setTimeout(() => {
 				sound.play('tap')
-				moveToStage(el, i)
+				moveToStage(el, i, () => {
+					if (i === word_char_els.length - 1) {
+						if (cb) cb()
+					}
+				})
 			}, i * 120)
 		})
 	}
@@ -482,7 +494,7 @@
 				moveChainToWord(word_index, () => {
 					if (words_2.length > 1) {
 						word_introduction(word_index, () => {
-							prepareStage(word_index)
+							prepareStage()
 							if (mode === 'normal') {
 								setCheckpointActive(phase_idx)
 							} else if (mode === 'easy') {
@@ -492,10 +504,10 @@
 					} else {
 						if (mode === 'normal') {
 							setCheckpointActive(phase_idx, () => {
-								prepareStage(word_index)
+								prepareStage()
 							})
 						} else {
-							prepareStage(word_index)
+							prepareStage()
 						}
 					}
 				})
@@ -583,15 +595,16 @@
 		})
 	}
 
-	const getRemainingSteps = () => {
+	const getStepLength = () => {
 		const completed_count = chain_els[word_index].filter(el => el.getAttribute('data-step-status') === 'complete').length
 		const total_count = words_2[word_index].chain_chars_count
-		return total_count - completed_count
+		const remaining_step_count = total_count - completed_count
+		return Math.min(3, remaining_step_count)
 	}
 
 	const highlightSteps = () => {
 		let start = chain_els[word_index].map(el => el.getAttribute('data-step-status')).lastIndexOf('complete') + 1
-		let length = Math.min(3, getRemainingSteps())
+		let length = getStepLength()
 		const targets = chain_els[word_index].slice(start, start + length)
 		targets.forEach(el => {
 			el.setAttribute('data-step-status', 'active')
