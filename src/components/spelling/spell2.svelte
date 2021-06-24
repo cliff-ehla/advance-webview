@@ -41,7 +41,7 @@
 
 	const onCharClick = e => {
 		const location = e.target.getAttribute("data-location")
-		const char = e.target.getAttribute("data-char")
+		const verified = e.target.getAttribute("data-verified")
 
 		if (location === 'stage') {
 			sound.play('ball-tap')
@@ -51,7 +51,6 @@
 					if (getToBeVerifyCharCount() === getStepLength()) {
 						const is_correct = verifyToBeVerifyWord()
 						if (is_correct) {
-							sound.play('bonus-earned')
 							completeSteps()
 							await tick()
 							if (getStepLength() === 0) {
@@ -103,7 +102,7 @@
 					}
 				}
 			})
-		} else if (location === 'chain') {
+		} else if (location === 'chain' && !verified) {
 			user_know_how_to_backspace = true
 			sound.play('stone-hit')
 			moveToStage(e.target, pickRandom(getEmptyStageIdx()), () => {
@@ -191,7 +190,13 @@
 	}
 
 	const verifyToBeVerifyWord = () => {
-		return getToBeVerifyChars().every(el => el.getAttribute('data-correct') === '1')
+		const is_correct = getToBeVerifyChars().every(el => el.getAttribute('data-correct') === '1')
+		if (is_correct) {
+			getToBeVerifyChars().forEach(el => {
+				el.setAttribute('data-verified', '1')
+			})
+		}
+		return is_correct
 	}
 
 	const moveChainCharsToStage = (els, cb) => {
@@ -603,6 +608,7 @@
 	}
 
 	const highlightSteps = () => {
+		sound.play('bonus-earned')
 		let start = chain_els[word_index].map(el => el.getAttribute('data-step-status')).lastIndexOf('complete') + 1
 		let length = getStepLength()
 		const targets = chain_els[word_index].slice(start, start + length)
