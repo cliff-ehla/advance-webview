@@ -1,80 +1,72 @@
 <script>
 	import SpellGameBar from '../components/spelling/spell-game-bar.svelte'
+	import {onMount} from 'svelte'
 
-	let data = [
-		{
-			phase: 'egg',
-			phase_audio: 'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/201907/egg_1563517563909.mp3',
-			word_audios: [
-				'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/201907/egg_1563517563909.mp3'
-			]
+	let data = [{
+		"id": "47491",
+		"word": "solar power",
+		"description": "n. 太陽能",
+		"description_alter": "n. 太陽能",
+		"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-47cf16cec79dedf889fefd2d4645737e-1624248816.mp3",
+		"image_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202106/17/solarpower_1623903013650.jpg",
+		"subwords": [{
+			"word": "solar",
+			"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-e2cf1817f9bb7713307949ada414cb68-1610783221.mp3"
 		},
+			{
+				"word": "power",
+				"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/08/4237power_1578468563691.mp3"
+			}
+		]
+	},
 		{
-			phase: 'bird',
-			phase_audio: 'https://ehla-media-bucket.s3.amazonaws.com/word_audio_20180201/bird-1548034645943.mp3',
-			word_audios: [
-				'https://ehla-media-bucket.s3.amazonaws.com/word_audio_20180201/bird-1548034645943.mp3'
-			]
-		},
-		{
-			phase: 'leg',
-			phase_audio: 'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/31/leg_1580453536370.mp3',
-			word_audios: [
-				'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/31/leg_1580453536370.mp3'
-			]
-		},
-		{
-			phase: 'middle school',
-			phase_audio: 'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/vocab/middle+school.mp3',
-			word_audios: [
-				'https://ehla-media-bucket.s3.amazonaws.com/audios/wordaudio-1480586389894-middle-14805863893639.mp3',
-				'https://ehla-media-bucket.s3.amazonaws.com/word_audio_20190429/school-1558594856543.mp3'
-			]
-		},
-		{
-			phase: 'dragon boat races',
-			phase_audio: 'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202012/25/dragonboatraces_1608891252743.mp3',
-			word_audios: [
-				'https://ehla-media-bucket.s3.amazonaws.com/word_audio_20190429/dragon-1562726540995.mp3',
-				'https://ehla-media-bucket.s3.amazonaws.com/audios/wordaudio-1490087871940-boat.mp3',
-				'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/31/race_1580451305925.mp3'
-			]
-		},
-		{
-			phase: 'departure lounge',
-			phase_audio: 'https://ehla-media-bucket.s3.amazonaws.com/ehlapolly/37/973/Amy-standard-6923ba8a95379f0ca94c26253809ba08-1616378696.mp3',
-			word_audios: [
-				'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/23/departure_1579764413309.mp3',
-				'https://ehla-media-bucket.s3.amazonaws.com/cms/audios/201912/12/lounge_1576140323303.mp3',
-			]
-		},
-		{
-			phase: 'hydroelectricity',
-			phase_audio: 'https://ehla-media-bucket.s3.amazonaws.com/cms/dictation_audio_201102/20201120/hydroelectricity.mp3',
-			word_audios: [
-				'https://ehla-media-bucket.s3.amazonaws.com/cms/dictation_audio_201102/20201120/hydroelectricity.mp3'
+			"id": "47492",
+			"word": "marine energy",
+			"description": null,
+			"description_alter": null,
+			"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-6f2b33e29bb23573ce3e0e8b859585ef-1624248816.mp3",
+			"image_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202106/17/Marineenergy_1623903168069.jpg",
+			"subwords": [{
+				"word": "marine",
+				"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/word_audio_20190429/marine-1562309062391.mp3"
+			},
+				{
+					"word": "energy",
+					"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/word_audio_20190429/energy-1557471587892.mp3"
+				}
 			]
 		}
 	]
 
 	let start = false
 
-	$: phases = data.map(obj => {
-		let words = obj.phase.split(' ')
-		words = words.map((w,i) => ({
-			word: w,
-			audio: obj.word_audios[i]
-		}))
-		return {
-			phase: obj.phase,
-			phase_audio: obj.phase_audio,
-			words
-		}
-	})
+	const convert = () => {
+		data.forEach(v => {
+			v.phase = v.word
+			v.phase_audio = v.audio_path
+			v.subwords.forEach(s => {
+				s.audio = s.audio_path
+			})
+			v.words = v.subwords.map(s => ({
+				audio: s.audio_path,
+				word: s.word
+			}))
+		})
+		console.log(data)
+	}
+
+	onMount(convert)
 </script>
 
 <svelte:window on:click={() => start = true} on:touchstart={() => start = true}/>
 {#if start}
-	<SpellGameBar {phases} hp_count={4} mode="normal"/>
+	<SpellGameBar phases={data} mode="normal"/>
+{:else}
+	<div class="w-screen h-screen flex items-center justify-center">
+		<div class="text-center">
+			<p class="text-gray-400">Spelling game sample:</p>
+			<p>Touch the screen to start</p>
+		</div>
+	</div>
 {/if}
 
