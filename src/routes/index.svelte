@@ -1,5 +1,6 @@
-<script context="module">
-	export function preload () {
-		this.redirect(302, 'spelling-sample')
-	}
+<script>
+	let query = '?words=%5B%7B"id"%3A"47491"%2C"word"%3A"solar%20power"%2C"description"%3A"n.%20太陽能"%2C"description_alter"%3A"n.%20太陽能"%2C"audio_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.ap-southeast-1.amazonaws.com%2Fehlapolly%2Fadvanced%2FAmy-standard-47cf16cec79dedf889fefd2d4645737e-1624248816.mp3"%2C"image_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.amazonaws.com%2Fcms%2Faudios%2F202106%2F17%2Fsolarpower_1623903013650.jpg"%2C"subwords"%3A%5B%7B"word"%3A"solar"%2C"audio_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.ap-southeast-1.amazonaws.com%2Fehlapolly%2Fadvanced%2FAmy-standard-e2cf1817f9bb7713307949ada414cb68-1610783221.mp3"%7D%2C%7B"word"%3A"power"%2C"audio_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.amazonaws.com%2Fcms%2Faudios%2F202001%2F08%2F4237power_1578468563691.mp3"%7D%5D%7D%2C%7B"id"%3A"47492"%2C"word"%3A"marine%20energy"%2C"description"%3Anull%2C"description_alter"%3Anull%2C"audio_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.ap-southeast-1.amazonaws.com%2Fehlapolly%2Fadvanced%2FAmy-standard-6f2b33e29bb23573ce3e0e8b859585ef-1624248816.mp3"%2C"image_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.amazonaws.com%2Fcms%2Faudios%2F202106%2F17%2FMarineenergy_1623903168069.jpg"%2C"subwords"%3A%5B%7B"word"%3A"marine"%2C"audio_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.amazonaws.com%2Fword_audio_20190429%2Fmarine-1562309062391.mp3"%7D%2C%7B"word"%3A"energy"%2C"audio_path"%3A"https%3A%2F%2Fehla-media-bucket.s3.amazonaws.com%2Fword_audio_20190429%2Fenergy-1557471587892.mp3"%7D%5D%7D%5D'
 </script>
+
+<a class="p-4 block" href="spelling-sample">Sample</a>
+<a class="p-4 block" href="spelling/{query}">Spelling</a>
