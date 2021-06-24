@@ -5,7 +5,7 @@
 
 	let start = false
 
-	let data = [{
+	let phases = [{
 		"id": "47491",
 		"word": "solar power",
 		"description": "n. 太陽能",
@@ -44,7 +44,7 @@
 	let loaded = false
 
 	const convertData = () => {
-		data.forEach(v => {
+		phases.forEach(v => {
 			v.phase = v.word
 			v.phase_audio = v.audio_path
 			v.subwords.forEach(s => {
@@ -55,11 +55,10 @@
 				word: s.word
 			}))
 		})
-		console.log(data)
 	}
 
 	const loadAudio = async () => {
-		const all_phase_audios = data.map(p => p.phase_audio).filter(v => !!v)
+		const all_phase_audios = phases.map(p => p.phase_audio).filter(v => !!v)
 		const all_word = phases.map(p => p.words.map(w => w.word)).reduce((a,b) => [...a, ...b], []).filter(a => !!a)
 		let all_chars = Array.from(new Set(all_word.map(w => w.toLowerCase()).join().split(''))).sort()
 		all_chars = all_chars.filter(c => /^[a-zA-Z()]+$/.test(c))
@@ -84,7 +83,7 @@
 
 <svelte:window on:click={() => start = true} on:touchstart={() => start = true}/>
 {#if start}
-	<SpellGameBar phases={data} mode="normal"/>
+	<SpellGameBar phases={phases} mode="normal"/>
 {:else}
 	<div class="w-screen h-screen flex items-center justify-center">
 		<div class="text-center">
