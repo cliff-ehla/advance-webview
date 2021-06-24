@@ -51,10 +51,10 @@
 					if (getToBeVerifyCharCount() === 3) {
 						const is_correct = verifyToBeVerifyWord()
 						if (is_correct) {
-							getToBeVerifyChars().forEach(el => {
-								el.setAttribute('data-to-be-verify', '-1')
-							})
 							sound.play('bonus-earned')
+							completeSteps()
+							await tick()
+							highlightSteps()
 						} else {
 							moveChainCharsToStage(getToBeVerifyChars(), () => {
 								word_introduction(word_index)
@@ -569,9 +569,29 @@
 		}
 	}
 
+	const completeSteps = () => {
+		getToBeVerifyChars().forEach(el => {
+			el.setAttribute('data-to-be-verify', '-1')
+		})
+		const active_chain_els = chain_els[word_index].filter(el => el.getAttribute('data-step-status') === 'active')
+		active_chain_els.forEach(el => {
+			el.setAttribute('data-step-status', 'complete')
+		})
+		gsap.killTweensOf(active_chain_els)
+		gsap.set(active_chain_els, {
+			background: 'white'
+		})
+	}
+
+	const getRemainingSteps = () => {
+		const completed_count = chain_els[word_index].filter(el => el.getAttribute('data-step-status') === 'complete').length
+		const total_count = words_2[word_index].chain_chars_count
+		return total_count - completed_count
+	}
+
 	const highlightSteps = () => {
-		let start = 0
-		let length = 3
+		let start = chain_els[word_index].map(el => el.getAttribute('data-step-status')).lastIndexOf('complete') + 1
+		let length = Math.min(3, getRemainingSteps())
 		const targets = chain_els[word_index].slice(start, start + length)
 		targets.forEach(el => {
 			el.setAttribute('data-step-status', 'active')
