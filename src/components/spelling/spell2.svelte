@@ -44,7 +44,6 @@
 		const verified = e.target.getAttribute("data-verified")
 
 		if (location === 'stage') {
-			sound.play('ball-tap')
 			moveToChain(e.target, async () => {
 				addNextBenchCharToStage()
 				if (mode === 'easy') {
@@ -272,6 +271,8 @@
 	}
 
 	const moveToChain = (el, cb) => {
+		if (mode === 'easy' && char_index > getCurrentStepLastIdx()) return
+		sound.play('ball-tap')
 		const is_correct = verifyChar(el.getAttribute('data-char'))
 		moveCharTo(el, chain_els[word_index][char_index], () => {
 			el.setAttribute('data-animated-to-stage', 1)
@@ -621,6 +622,10 @@
 			repeat: -1,
 			yoyo: true
 		})
+	}
+
+	const getCurrentStepLastIdx = () => {
+		return chain_els[word_index].map(el => el.getAttribute('data-step-status')).lastIndexOf('active')
 	}
 
 	const onKeydown = e => {
