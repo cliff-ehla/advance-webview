@@ -6,7 +6,7 @@
 	import SpellMaster from './spell-master.svelte'
 
 	export let mode
-	export let hp_count
+	export let hp_count = 3
 	export let phases
 	const question_count = phases.length
 
@@ -150,10 +150,16 @@
 
 <div class="bg-purple-700 relative h-screen" style="background: {mode === 'easy' ? '#59B7FF' : '#3A34AB'}">
 	<div class="z-50 relative w-full flex items-center justify-around px-2" style="height: 4em;">
-		<div class="w-28">
+		<div class="w-40 flex items-center">
 			<div on:click={onPauseClick} class="cursor-pointer w-10 h-10 rounded-full bg-white bg-opacity-30 flex justify-center items-center text-white">
 				<Icon name="pause"/>
 			</div>
+			{#if mode === 'easy'}
+				<div class="ml-4 inline-flex items-center">
+					<img class="h-10" src="/image/spelling/coin.png" alt="coin">
+					<p class="font-bold ml-1 text-white" style="font-size: 1.3em">300</p>
+				</div>
+			{/if}
 		</div>
 		<div class="flex-1">
 			<div class="flex justify-center items-center">
@@ -166,20 +172,18 @@
 						</div>
 					{/each}
 				{:else if mode === 'easy'}
-					bar
+					<div class="w-full h-2 rounded-full relative" style="background: #5775C2;">
+						<div class="absolute left-0 inset-y-0 rounded-full" style="width: 30%; background: #FFB8DC"></div>
+					</div>
 				{/if}
 			</div>
 		</div>
-		<div class="w-28 flex justify-end">
+		<div class="w-40 flex justify-end">
 			{#if mode === 'easy'}
 				{#each [...Array(hp_count).keys()] as i}
-					<div class="mx-1 text-red-500 relative">
-						<div class="text-blue-700">
-							<Icon name="heart"/>
-						</div>
-						<div class="absolute inset-0 text-red-500" bind:this={heart_els[i]}>
-							<Icon name="heart"/>
-						</div>
+					<div class="mx-1 w-8 relative">
+						<img src="/image/spelling/heart-placeholder.png" alt="heart">
+						<img class="absolute inset-0 text-red-500" src="/image/spelling/heart.png" alt="heart" bind:this={heart_els[i]}>
 					</div>
 				{/each}
 			{/if}

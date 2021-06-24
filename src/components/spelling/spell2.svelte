@@ -617,7 +617,7 @@
 			el.setAttribute('data-step-status', 'active')
 		})
 		gsap.to(targets, {
-			background: '#F8EBBE',
+			background: '#FEFFBB',
 			stagger: 0.15,
 			repeat: -1,
 			yoyo: true
