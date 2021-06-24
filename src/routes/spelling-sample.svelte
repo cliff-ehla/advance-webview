@@ -1,6 +1,8 @@
 <script>
 	import SpellGameBar from '../components/spelling/spell-game-bar.svelte'
 	import {onMount} from 'svelte'
+	import {sound} from "../components/spelling/Sound";
+	import {phases} from "../components/spelling/spell-master.svelte";
 
 	let data = [{
 		"id": "47491",
@@ -38,9 +40,9 @@
 		}
 	]
 
-	let start = false
+	let loaded = false
 
-	const convert = () => {
+	const convertData = () => {
 		data.forEach(v => {
 			v.phase = v.word
 			v.phase_audio = v.audio_path
@@ -55,7 +57,28 @@
 		console.log(data)
 	}
 
-	onMount(convert)
+	const loadAudio = async () => {
+		const all_phase_audios = data.map(p => p.phase_audio).filter(v => !!v)
+		const all_word = phases.map(p => p.words.map(w => w.word)).reduce((a,b) => [...a, ...b], []).filter(a => !!a)
+		let all_chars = Array.from(new Set(all_word.map(w => w.toLowerCase()).join().split(''))).sort()
+		all_chars = all_chars.filter(c => /^[a-zA-Z()]+$/.test(c))
+		all_chars.forEach(char => {
+			sound.load(char, `https://ehla-media-bucket.s3-ap-southeast-1.amazonaws.com/baby/sounds/alphabets/${char}.mp3`)
+		})
+		let all_audios = phases.map(p => p.words.map(w => w.audio)).reduce((a,b) => [...a, ...b], []).filter(a => !!a)
+		all_audios = [...all_audios, ...all_phase_audios]
+		const audio_sfx = ['tap', 'tap-2', 'stone-hit', 'collected-coin', 'magic-unlock', 'magic-unlock-2', 'boom', 'mechanical-crate-pick-up', 'bonus-earned', 'extra-bonus', 'treasure', 'flute-alert', 'negative-guitar-tone', 'bonus-extra', 'sci-fi-laser', 'flute-alert-short', 'ball-tap']
+		audio_sfx.forEach(key => {
+			sound.load(key, `/sound/${key}.mp3`)
+		})
+		await sound.loadBatch(all_audios)
+	}
+
+	onMount(async () => {
+		convertData()
+		await loadAudio()
+		loaded = true
+	})
 </script>
 
 <svelte:window on:click={() => start = true} on:touchstart={() => start = true}/>
