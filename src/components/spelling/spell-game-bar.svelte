@@ -139,12 +139,19 @@
 			autoAlpha: 0
 		})
 	})
+
+	const onPauseClick = () => {
+		const message = {
+			type: 'spelling:exit'
+		}
+		window.postMessage(JSON.stringify(message))
+	}
 </script>
 
 <div class="bg-purple-700 relative h-screen" style="background: #3A34AB">
 	<div class="z-50 relative w-full flex items-center justify-around px-2" style="height: 4em;">
 		<div class="w-28">
-			<div class="w-10 h-10 rounded-full bg-white bg-opacity-30 flex justify-center items-center text-white">
+			<div on:click={onPauseClick} class="cursor-pointer w-10 h-10 rounded-full bg-white bg-opacity-30 flex justify-center items-center text-white">
 				<Icon name="pause"/>
 			</div>
 		</div>

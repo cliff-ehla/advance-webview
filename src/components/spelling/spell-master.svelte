@@ -32,7 +32,15 @@
 
 	const endGame = async () => {
 		await sound.play('bonus-extra')
-		console.log(question_result)
+		let result = phases.map((p,i) => ({
+			...p,
+			spelling_result: question_result[i]
+		}))
+		const message = {
+			type: 'spelling:result',
+			data: result
+		}
+		window.postMessage(JSON.stringify(message))
 	}
 
 	const initQuestion = () => {
