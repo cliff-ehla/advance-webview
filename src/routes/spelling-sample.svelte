@@ -78,11 +78,26 @@
 		await loadAudio()
 		loaded = true
 	})
+
+	const onExit = () => {
+		selected_mode = null
+	}
+
+	const onBack = () => {
+		const message = {
+			type: 'spelling:exit'
+		}
+		window.postMessage(JSON.stringify(message))
+	}
 </script>
 
 {#if selected_mode}
-	<SpellGameBar phases={phases} mode={selected_mode}/>
+	<SpellGameBar on:exit={onExit} phases={phases} mode={selected_mode}/>
 {:else}
+	<svg on:click={onBack} class="z-30 fixed left-4 top-4 w-10" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M22.6213 8.12132C23.7929 6.94975 23.7929 5.05025 22.6213 3.87868C21.4497 2.70711 19.5503 2.70711 18.3787 3.87868L3.87868 18.3787C2.72112 19.5362 2.70526 21.4081 3.84304 22.5851L18.343 37.5851C19.4946 38.7763 21.3938 38.8085 22.5851 37.657C23.7763 36.5054 23.8085 34.6062 22.657 33.4149L13.5559 24H35.5C37.1569 24 38.5 22.6569 38.5 21C38.5 19.3431 37.1569 18 35.5 18H12.7426L22.6213 8.12132Z" fill="white"/>
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M24.7426 1.75736C27.0858 4.10051 27.0858 7.89949 24.7426 10.2426L19.9853 15H35.5C38.8137 15 41.5 17.6863 41.5 21C41.5 24.3137 38.8137 27 35.5 27H20.6284L24.8139 31.3299C27.117 33.7124 27.0527 37.5108 24.6701 39.8139C22.2876 42.117 18.4892 42.0527 16.1861 39.6701L1.68607 24.6701C-0.589479 22.3161 -0.557754 18.5725 1.75736 16.2574L3.87868 18.3787C2.72112 19.5362 2.70526 21.4081 3.84304 22.5851L18.343 37.5851C19.4946 38.7763 21.3938 38.8085 22.5851 37.657C23.7763 36.5054 23.8085 34.6062 22.657 33.4149L13.5559 24H35.5C37.1569 24 38.5 22.6569 38.5 21C38.5 19.3431 37.1569 18 35.5 18H12.7426L22.6213 8.12132C23.7929 6.94975 23.7929 5.05025 22.6213 3.87868C21.4497 2.70711 19.5503 2.70711 18.3787 3.87868L3.87868 18.3787L1.75736 16.2574L16.2574 1.75736C18.6005 -0.585787 22.3995 -0.585786 24.7426 1.75736Z" fill="#AFBA3A"/>
+	</svg>
 	<div class="relative w-screen h-screen flex items-center justify-center px-12" style="background-image: linear-gradient(#FDFFE8,#FBFFCA)">
 		<div class="relative z-10 grid gap-8 grid-cols-2">
 			<div on:touchstart={() => {selected_mode = 'easy'}} class="relative flex justify-center">

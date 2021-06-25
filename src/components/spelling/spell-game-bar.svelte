@@ -1,5 +1,5 @@
 <script>
-	import {onMount, setContext} from 'svelte'
+	import {onMount, setContext, createEventDispatcher} from 'svelte'
 	import gsap from 'gsap'
 	import Icon from '../icon.svelte'
 	import {sound} from "./Sound";
@@ -9,11 +9,9 @@
 	export let hp_count = 6
 	export let phases
 	const question_count = phases.length
+	const dispatch = createEventDispatcher()
 
 	$: total_words_count = phases.reduce((a,c) => a += c.words.length, 0)
-	$: {
-		console.log(word_progress / total_words_count * 100)
-	}
 
 	// save the status
 	let hp = hp_count
@@ -196,10 +194,7 @@
 	})
 
 	const onPauseClick = () => {
-		const message = {
-			type: 'spelling:exit'
-		}
-		window.postMessage(JSON.stringify(message))
+		dispatch('exit')
 	}
 </script>
 
