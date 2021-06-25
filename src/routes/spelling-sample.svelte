@@ -104,7 +104,7 @@
 				<img src="image/spelling/easy-card.png" alt="card" class="w-64 transform -rotate-6">
 				<img src="image/spelling/easy-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-12">
 			</div>
-			<div on:touchstart={() => {selected_mode = 'hard'}} class="relative flex justify-center">
+			<div on:touchstart={() => {selected_mode = 'normal'}} class="relative flex justify-center">
 				<img src="image/spelling/hard-card.png" alt="card" class="w-64 transform rotate-6">
 				<img src="image/spelling/hard-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-20">
 			</div>

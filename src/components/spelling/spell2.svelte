@@ -126,6 +126,7 @@
 		then play and vocab audio
 	*/
 	const shakeChain = (cb) => {
+		if (!cb) cb = () => {}
 		sound.play('flute-alert-short')
 		chain_broken = true
 		let el = chain_els[word_index]
@@ -142,7 +143,9 @@
 			x: "-=20",
 			duration: 0.1,
 			onComplete: () => {
-				moveChainCharsToStage(char_els[word_index], setTimeout(cb, 800))
+				moveChainCharsToStage(char_els[word_index], () => {
+					setTimeout(cb, 800)
+				})
 			}
 		})
 	}
