@@ -12,7 +12,7 @@
 	export let phase_idx
 	export let mode
 
-	const {lessHeart, setCheckpointActive, setCheckpointDanger, setCheckpointFail, setCheckpointSuccess} = getContext('spell-game-bar')
+	const {lessHeart, addHeart, setCheckpointActive, setCheckpointDanger, setCheckpointFail, setCheckpointSuccess, addCoin} = getContext('spell-game-bar')
 	const dispatch  = createEventDispatcher()
 	let words_2 = []
 	const MAX_STAGE_CHARS = 5
@@ -54,17 +54,24 @@
 							await tick()
 							if (getStepLength() === 0) {
 								if (word_index < words_2.length - 1) {
+									addHeart()
 									nextWord(highlightSteps)
 								} else {
+									addHeart()
 									nextPhase()
 								}
 							} else {
 								highlightSteps()
 							}
 						} else {
-							moveChainCharsToStage(getToBeVerifyChars(), () => {
-								word_introduction(word_index)
-							})
+							lessHeart()
+							if (hp === 1) {
+								dispatch('game-over')
+							} else {
+								moveChainCharsToStage(getToBeVerifyChars(), () => {
+									word_introduction(word_index)
+								})
+							}
 						}
 					}
 				} else if (mode === 'normal') {
@@ -599,6 +606,7 @@
 		gsap.set(active_chain_els, {
 			background: 'white'
 		})
+		addCoin()
 	}
 
 	const getStepLength = () => {

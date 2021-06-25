@@ -48,6 +48,11 @@
 		render = true
 	}
 
+	const onGameOver = () => {
+		render = false
+		sound.play('player-losing')
+	}
+
 	onMount(async () => {
 		all_audio_loaded = true
 		initQuestion()
@@ -55,5 +60,5 @@
 </script>
 
 {#if all_audio_loaded && render}
-	<Spell on:next={onNext} words={phase.words} phase_audio={phase.phase_audio} {hp} phase_idx={idx} {mode}></Spell>
+	<Spell on:game-over={onGameOver} on:next={onNext} words={phase.words} phase_audio={phase.phase_audio} {hp} phase_idx={idx} {mode}></Spell>
 {/if}

@@ -6,13 +6,14 @@
 	import SpellMaster from './spell-master.svelte'
 
 	export let mode
-	export let hp_count = 3
+	export let hp_count = 6
 	export let phases
 	const question_count = phases.length
 
 	// save the status
 	let hp = hp_count
 	let question_result = []
+	let coin = 0
 
 	// dom
 	let heart_els = []
@@ -107,21 +108,63 @@
 	}
 
 	const lessHeart = (cb) => {
-		gsap.to(heart_els[hp - 1], {
-			y: window.innerHeight / 2,
-			x: -window.innerWidth / 2,
+		if (!cb) cb = () => {}
+		let el = heart_els[hp - 1]
+		gsap.timeline().to(el, {
+			x: "+=20",
+			rotate: "+=45",
+			duration: 0.1
+		}).to(el, {
+			x: "-=20",
+			rotate: "-=45",
+			duration: 0.1
+		}).to(el, {
+			x: "+=10",
+			rotate: "+=30",
+			duration: 0.1
+		}).to(el, {
+			x: "-=10",
+			rotate: "-=30",
+			duration: 0.1
+		}).to(el, {
+			y: "+=200",
 			scaleX: 5,
 			scaleY: 5,
 			rotate: 360,
 			autoAlpha: 0,
 			duration: 1.5,
 			onComplete: cb
+		}).to(el, {
+			scaleX: 1,
+			scaleY: 1,
+			rotate: 0,
 		})
 		hp--
 	}
 
 	const addHeart = () => {
+		if (hp === 6) return
+		console.log('addHeart')
+		sound.play('health-recharge')
+		let el = heart_els[hp]
+		gsap.timeline().to(el, {
+			autoAlpha: 1,
+			yoyo: true,
+			repeat: 6,
+			duration: 0.15
+		})
+		gsap.to(el, {
+			y: "-=200",
+			duration: 0.9
+		})
+		hp++
+	}
 
+	const addCoin = () => {
+		sound.play('game-coin-touch')
+		setTimeout(() => sound.play('game-coin-touch'), 250)
+		setTimeout(() => sound.play('game-coin-touch'), 500)
+		coin += 100
 	}
 
 	setContext('spell-game-bar', {
@@ -130,7 +173,8 @@
 		setCheckpointFail,
 		setCheckpointSuccess,
 		addHeart,
-		lessHeart
+		lessHeart,
+		addCoin
 	})
 
 	onMount(() => {
@@ -150,14 +194,14 @@
 
 <div class="bg-purple-700 relative h-screen" style="background: {mode === 'easy' ? '#59B7FF' : '#3A34AB'}">
 	<div class="z-50 relative w-full flex items-center justify-around px-2" style="height: 4em;">
-		<div class="w-40 flex items-center">
+		<div class="w-48 flex items-center">
 			<div on:click={onPauseClick} class="cursor-pointer w-10 h-10 rounded-full bg-white bg-opacity-30 flex justify-center items-center text-white">
 				<Icon name="pause"/>
 			</div>
 			{#if mode === 'easy'}
 				<div class="ml-4 inline-flex items-center">
 					<img class="h-10" src="/image/spelling/coin.png" alt="coin">
-					<p class="font-bold ml-1 text-white" style="font-size: 1.3em">300</p>
+					<p class="font-bold ml-1 text-white" style="font-size: 1.3em">{coin}</p>
 				</div>
 			{/if}
 		</div>
@@ -178,13 +222,21 @@
 				{/if}
 			</div>
 		</div>
-		<div class="w-40 flex justify-end">
+		<div class="w-48 flex justify-end">
 			{#if mode === 'easy'}
 				{#each [...Array(hp_count).keys()] as i}
-					<div class="mx-1 w-8 relative">
-						<img src="/image/spelling/heart-placeholder.png" alt="heart">
-						<img class="absolute inset-0 text-red-500" src="/image/spelling/heart.png" alt="heart" bind:this={heart_els[i]}>
+					<div class="w-4 relative">
+						{#if i % 2 === 0}
+							<img src="/image/spelling/heart-placeholder-left.png" alt="heart">
+							<img class="absolute inset-0 text-red-500" src="/image/spelling/heart-left.png" alt="heart" bind:this={heart_els[i]}>
+						{:else}
+							<img src="/image/spelling/heart-placeholder-right.png" alt="heart">
+							<img class="absolute inset-0 text-red-500" src="/image/spelling/heart-right.png" alt="heart" bind:this={heart_els[i]}>
+						{/if}
 					</div>
+					{#if i % 2 === 1}
+						<div class="w-1"></div>
+					{/if}
 				{/each}
 			{/if}
 		</div>
