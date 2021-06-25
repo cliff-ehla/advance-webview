@@ -66,7 +66,7 @@
 		})
 		let all_audios = phases.map(p => p.words.map(w => w.audio)).reduce((a,b) => [...a, ...b], []).filter(a => !!a)
 		all_audios = [...all_audios, ...all_phase_audios]
-		const audio_sfx = ['tap', 'tap-2', 'stone-hit', 'collected-coin', 'magic-unlock', 'magic-unlock-2', 'boom', 'mechanical-crate-pick-up', 'bonus-earned', 'extra-bonus', 'treasure', 'flute-alert', 'negative-guitar-tone', 'bonus-extra', 'sci-fi-laser', 'flute-alert-short', 'ball-tap', 'game-coin-touch', 'treasure-coin', 'player-losing', 'health-recharge', 'game-bonus-reached']
+		const audio_sfx = ['tap', 'tap-2', 'stone-hit', 'collected-coin', 'magic-unlock', 'magic-unlock-2', 'boom', 'mechanical-crate-pick-up', 'bonus-earned', 'extra-bonus', 'treasure', 'flute-alert', 'negative-guitar-tone', 'bonus-extra', 'sci-fi-laser', 'flute-alert-short', 'ball-tap', 'game-coin-touch', 'treasure-coin', 'player-losing', 'health-recharge', 'game-bonus-reached', 'changing-tab', 'casino-notification']
 		audio_sfx.forEach(key => {
 			sound.load(key, `/sound/${key}.mp3`)
 		})

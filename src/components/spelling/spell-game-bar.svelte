@@ -24,6 +24,8 @@
 	let star_els = []
 	let star_holder_els = []
 	let star_broken_els = []
+	let dialog_el
+	let dialog_backdrop_el
 
 	const setCheckpointActive = (i, cb) => {
 		if (!cb) cb = () => {}
@@ -191,14 +193,65 @@
 		gsap.set(star_broken_els, {
 			autoAlpha: 0
 		})
+		gsap.set([dialog_backdrop_el, dialog_el], {
+			autoAlpha: 0
+		})
 	})
 
 	const onPauseClick = () => {
+		showExitDialog()
+	}
+
+	const showExitDialog = () => {
+		sound.play('changing-tab')
+		gsap.to(dialog_backdrop_el, {
+			autoAlpha: 0.6,
+			duration: 0.5
+		})
+		gsap.fromTo(dialog_el, {
+			y: "+=100",
+			scale: 0
+		}, {
+			scale: 1,
+			y: "-=100",
+			autoAlpha: 1,
+			ease: "back.out",
+			duration: 0.35
+		})
+	}
+
+	const closeExitDialog = () => {
+		sound.play('changing-tab')
+		gsap.to(dialog_backdrop_el, {
+			autoAlpha: 0,
+			duration: 0.25
+		})
+		gsap.to(dialog_el, {
+			scale: 0,
+			autoAlpha: 0,
+			duration: 0.25
+		})
+	}
+
+	const confirmExit = () => {
+		sound.play('casino-notification')
 		dispatch('exit')
 	}
 </script>
 
-<div class="bg-purple-700 relative h-screen" style="background: {mode === 'easy' ? '#59B7FF' : '#3A34AB'}">
+<div bind:this={dialog_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+	<div class="font-bold bg-white border-4 p-12 border-red-500 text-center" style="border-radius: 3em">
+		<p class="mb-6 text-2xl">Quit?</p>
+		<div class="grid gap-4 grid-cols-2">
+			<button on:click={closeExitDialog} class="bg-white text-red-500 border-red-500 border-4 px-8 py-2 rounded-full">NO</button>
+			<button on:click={confirmExit} class="bg-red-500 text-white px-8 py-2 rounded-full">YES</button>
+		</div>
+	</div>
+</div>
+
+<div bind:this={dialog_backdrop_el} class="fixed z-40 inset-0 bg-black flex items-center justify-center"></div>
+
+<div class="bg-purple-700 relative z-30 h-screen" style="background: {mode === 'easy' ? '#59B7FF' : '#3A34AB'}">
 	<div class="z-50 relative w-full flex items-center justify-around px-2" style="height: 4em;">
 		<div class="w-48 flex items-center">
 			<div on:click={onPauseClick} class="cursor-pointer w-10 h-10 rounded-full bg-white bg-opacity-30 flex justify-center items-center text-white">
