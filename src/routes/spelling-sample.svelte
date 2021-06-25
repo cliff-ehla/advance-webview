@@ -3,8 +3,6 @@
 	import {onMount} from 'svelte'
 	import {sound} from "../components/spelling/Sound";
 
-	let start = false
-
 	let phases = [{
 		"id": "47491",
 		"word": "solar power",
@@ -42,6 +40,7 @@
 	]
 
 	let loaded = false
+	let selected_mode
 
 	const convertData = () => {
 		phases.forEach(v => {
@@ -81,15 +80,27 @@
 	})
 </script>
 
-<svelte:window on:click={() => start = true} on:touchstart={() => start = true}/>
-{#if start}
-	<SpellGameBar phases={phases} mode="easy"/>
+{#if selected_mode}
+	<SpellGameBar phases={phases} mode={selected_mode}/>
 {:else}
-	<div class="w-screen h-screen flex items-center justify-center">
-		<div class="text-center">
-			<p class="text-gray-400">Spelling game sample:</p>
-			<p>Touch the screen to start</p>
+	<div class="relative w-screen h-screen flex items-center justify-center px-12" style="background-image: linear-gradient(#FDFFE8,#FBFFCA)">
+		<div class="relative z-10 grid gap-8 grid-cols-2">
+			<div on:touchstart={() => {selected_mode = 'easy'}} class="relative flex justify-center">
+				<img src="image/spelling/easy-card.png" alt="card" class="w-64 transform -rotate-6">
+				<img src="image/spelling/easy-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-12">
+			</div>
+			<div on:touchstart={() => {selected_mode = 'hard'}} class="relative flex justify-center">
+				<img src="image/spelling/hard-card.png" alt="card" class="w-64 transform rotate-6">
+				<img src="image/spelling/hard-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-20">
+			</div>
 		</div>
+		<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 375" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<ellipse cx="152.5" cy="387.5" rx="365.5" ry="323.5" fill="#F0F4C5"/>
+			<ellipse cx="634.5" cy="315.5" rx="365.5" ry="323.5" fill="#F5F8D8"/>
+			<ellipse cx="585.5" cy="387.5" rx="365.5" ry="323.5" fill="#FDFFE8"/>
+			<ellipse cx="575" cy="373" rx="332" ry="186" fill="#F0F4C4"/>
+			<ellipse cx="23" cy="387" rx="199" ry="194" fill="#F7FFA2"/>
+		</svg>
 	</div>
 {/if}
 
