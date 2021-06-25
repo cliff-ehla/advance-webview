@@ -1,14 +1,21 @@
 <script>
 	import SpellGameBar from '../components/spelling/spell-game-bar.svelte'
-	import {onMount} from 'svelte'
+	import {onMount, tick} from 'svelte'
 	import {sound} from "../components/spelling/Sound";
+	import gsap from 'gsap'
 	import {stores} from "@sapper/app";
 	const {page} = stores()
 
 	let phases
-
-	let loaded = false
 	let selected_mode
+
+	// element
+	let left_card
+	let left_button
+	let right_card
+	let right_button
+
+	let loaded_image_count = 0
 
 	const convertData = () => {
 		phases.forEach(v => {
@@ -42,16 +49,54 @@
 	}
 
 	onMount(async () => {
+		gsap.set([right_button, left_card], {
+			opacity: 0
+		})
+		setTimeout(() => {
+			introAnimation()
+		}, 100)
 		phases = $page.query.words
 		if (!(phases && phases.length)) return console.log('nothing from query')
 		else phases = JSON.parse(decodeURIComponent(phases))
 		convertData()
 		await loadAudio()
-		loaded = true
 	})
 
-	const onExit = () => {
+	const introAnimation = () => {
+		gsap.timeline().to(left_card, {
+			rotate: -8,
+			duration: 0.3,
+			opacity: 1,
+			ease: 'back.out'
+		}).to(right_card, {
+			rotate: 8,
+			duration: 0.3,
+			opacity: 1,
+			ease: 'back.out'
+		}).fromTo([left_button, right_button], {
+			y: "+=30"
+		}, {
+			y: "-=30",
+			duration: 0.5,
+			opacity: 1,
+			ease: 'back.out'
+		})
+	}
+
+	const onImageLoad = () => {
+		loaded_image_count++
+		if (loaded_image_count === 4) {
+			setTimeout(() => {
+				introAnimation()
+				console.log('intro animation after loaded image')
+			}, 50)
+		}
+	}
+
+	const onExit = async () => {
 		selected_mode = null
+		await tick()
+		introAnimation()
 	}
 
 	const onBack = () => {
@@ -59,6 +104,11 @@
 			type: 'spelling:exit'
 		}
 		window.postMessage(JSON.stringify(message))
+	}
+
+	const onSelect = (mode) => {
+		selected_mode = mode
+		sound.play('casino-notification')
 	}
 </script>
 
@@ -71,13 +121,13 @@
 	</svg>
 	<div class="relative w-screen h-screen flex items-center justify-center px-12" style="background-image: linear-gradient(#FDFFE8,#FBFFCA)">
 		<div class="relative z-10 grid gap-8 grid-cols-2">
-			<div on:touchstart={() => {selected_mode = 'easy'}} class="relative flex justify-center">
-				<img src="image/spelling/easy-card.png" alt="card" class="w-64 transform -rotate-6">
-				<img src="image/spelling/easy-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-12">
+			<div on:touchstart={() => {onSelect('easy')}} class="relative flex justify-center">
+				<img on:load={onImageLoad} bind:this={left_card} src="image/spelling/easy-card.png" alt="card" class="w-64 opacity-0">
+				<img on:load={onImageLoad} bind:this={left_button} src="image/spelling/easy-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-12 opacity-0">
 			</div>
-			<div on:touchstart={() => {selected_mode = 'normal'}} class="relative flex justify-center">
-				<img src="image/spelling/hard-card.png" alt="card" class="w-64 transform rotate-6">
-				<img src="image/spelling/hard-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-20">
+			<div on:touchstart={() => {onSelect('normal')}} class="relative flex justify-center">
+				<img on:load={onImageLoad} bind:this={right_card} src="image/spelling/hard-card.png" alt="card" class="w-64 opacity-0">
+				<img on:load={onImageLoad} bind:this={right_button} src="image/spelling/hard-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-20 opacity-0">
 			</div>
 		</div>
 		<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 375" fill="none" xmlns="http://www.w3.org/2000/svg">
