@@ -2,13 +2,13 @@
 	import SpellGameBar from '../components/spelling/spell-game-bar.svelte'
 	import {onMount} from 'svelte'
 	import {sound} from "../components/spelling/Sound";
-	import {stores} from '@sapper/app'
+	import {stores} from "@sapper/app";
 	const {page} = stores()
 
-	let start = false
-	let phases = []
+	let phases
 
 	let loaded = false
+	let selected_mode
 
 	const convertData = () => {
 		phases.forEach(v => {
@@ -34,7 +34,7 @@
 		})
 		let all_audios = phases.map(p => p.words.map(w => w.audio)).reduce((a,b) => [...a, ...b], []).filter(a => !!a)
 		all_audios = [...all_audios, ...all_phase_audios]
-		const audio_sfx = ['tap', 'tap-2', 'stone-hit', 'collected-coin', 'magic-unlock', 'magic-unlock-2', 'boom', 'mechanical-crate-pick-up', 'bonus-earned', 'extra-bonus', 'treasure', 'flute-alert', 'negative-guitar-tone', 'bonus-extra', 'sci-fi-laser', 'flute-alert-short', 'ball-tap', 'game-coin-touch', 'treasure-coin']
+		const audio_sfx = ['tap', 'tap-2', 'stone-hit', 'collected-coin', 'magic-unlock', 'magic-unlock-2', 'boom', 'mechanical-crate-pick-up', 'bonus-earned', 'extra-bonus', 'treasure', 'flute-alert', 'negative-guitar-tone', 'bonus-extra', 'sci-fi-laser', 'flute-alert-short', 'ball-tap', 'game-coin-touch', 'treasure-coin', 'player-losing', 'health-recharge', 'game-bonus-reached', 'changing-tab', 'casino-notification']
 		audio_sfx.forEach(key => {
 			sound.load(key, `/sound/${key}.mp3`)
 		})
@@ -49,17 +49,44 @@
 		await loadAudio()
 		loaded = true
 	})
+
+	const onExit = () => {
+		selected_mode = null
+	}
+
+	const onBack = () => {
+		const message = {
+			type: 'spelling:exit'
+		}
+		window.postMessage(JSON.stringify(message))
+	}
 </script>
 
-<svelte:window on:click={() => start = true} on:touchstart={() => start = true}/>
-{#if start}
-	<SpellGameBar phases={phases} mode="normal"/>
+{#if selected_mode}
+	<SpellGameBar on:exit={onExit} phases={phases} mode={selected_mode}/>
 {:else}
-	<div class="w-screen h-screen flex items-center justify-center">
-		<div class="text-center">
-			<p class="text-gray-400">Spelling game:</p>
-			<p>Touch the screen to start</p>
+	<svg on:click={onBack} class="z-30 fixed left-4 top-4 w-10" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M22.6213 8.12132C23.7929 6.94975 23.7929 5.05025 22.6213 3.87868C21.4497 2.70711 19.5503 2.70711 18.3787 3.87868L3.87868 18.3787C2.72112 19.5362 2.70526 21.4081 3.84304 22.5851L18.343 37.5851C19.4946 38.7763 21.3938 38.8085 22.5851 37.657C23.7763 36.5054 23.8085 34.6062 22.657 33.4149L13.5559 24H35.5C37.1569 24 38.5 22.6569 38.5 21C38.5 19.3431 37.1569 18 35.5 18H12.7426L22.6213 8.12132Z" fill="white"/>
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M24.7426 1.75736C27.0858 4.10051 27.0858 7.89949 24.7426 10.2426L19.9853 15H35.5C38.8137 15 41.5 17.6863 41.5 21C41.5 24.3137 38.8137 27 35.5 27H20.6284L24.8139 31.3299C27.117 33.7124 27.0527 37.5108 24.6701 39.8139C22.2876 42.117 18.4892 42.0527 16.1861 39.6701L1.68607 24.6701C-0.589479 22.3161 -0.557754 18.5725 1.75736 16.2574L3.87868 18.3787C2.72112 19.5362 2.70526 21.4081 3.84304 22.5851L18.343 37.5851C19.4946 38.7763 21.3938 38.8085 22.5851 37.657C23.7763 36.5054 23.8085 34.6062 22.657 33.4149L13.5559 24H35.5C37.1569 24 38.5 22.6569 38.5 21C38.5 19.3431 37.1569 18 35.5 18H12.7426L22.6213 8.12132C23.7929 6.94975 23.7929 5.05025 22.6213 3.87868C21.4497 2.70711 19.5503 2.70711 18.3787 3.87868L3.87868 18.3787L1.75736 16.2574L16.2574 1.75736C18.6005 -0.585787 22.3995 -0.585786 24.7426 1.75736Z" fill="#AFBA3A"/>
+	</svg>
+	<div class="relative w-screen h-screen flex items-center justify-center px-12" style="background-image: linear-gradient(#FDFFE8,#FBFFCA)">
+		<div class="relative z-10 grid gap-8 grid-cols-2">
+			<div on:touchstart={() => {selected_mode = 'easy'}} class="relative flex justify-center">
+				<img src="image/spelling/easy-card.png" alt="card" class="w-64 transform -rotate-6">
+				<img src="image/spelling/easy-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-12">
+			</div>
+			<div on:touchstart={() => {selected_mode = 'normal'}} class="relative flex justify-center">
+				<img src="image/spelling/hard-card.png" alt="card" class="w-64 transform rotate-6">
+				<img src="image/spelling/hard-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-20">
+			</div>
 		</div>
+		<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 375" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<ellipse cx="152.5" cy="387.5" rx="365.5" ry="323.5" fill="#F0F4C5"/>
+			<ellipse cx="634.5" cy="315.5" rx="365.5" ry="323.5" fill="#F5F8D8"/>
+			<ellipse cx="585.5" cy="387.5" rx="365.5" ry="323.5" fill="#FDFFE8"/>
+			<ellipse cx="575" cy="373" rx="332" ry="186" fill="#F0F4C4"/>
+			<ellipse cx="23" cy="387" rx="199" ry="194" fill="#F7FFA2"/>
+		</svg>
 	</div>
 {/if}
 
