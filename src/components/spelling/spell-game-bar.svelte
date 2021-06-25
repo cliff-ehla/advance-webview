@@ -10,10 +10,16 @@
 	export let phases
 	const question_count = phases.length
 
+	$: total_words_count = phases.reduce((a,c) => a += c.words.length, 0)
+	$: {
+		console.log(word_progress / total_words_count * 100)
+	}
+
 	// save the status
 	let hp = hp_count
 	let question_result = []
 	let coin = 0
+	let word_progress = 0
 
 	// dom
 	let heart_els = []
@@ -167,6 +173,10 @@
 		coin += 100
 	}
 
+	const addProgress = () => {
+		word_progress++
+	}
+
 	setContext('spell-game-bar', {
 		setCheckpointActive,
 		setCheckpointDanger,
@@ -174,7 +184,8 @@
 		setCheckpointSuccess,
 		addHeart,
 		lessHeart,
-		addCoin
+		addCoin,
+		addProgress
 	})
 
 	onMount(() => {
@@ -217,7 +228,7 @@
 					{/each}
 				{:else if mode === 'easy'}
 					<div class="w-full h-2 rounded-full relative" style="background: #5775C2;">
-						<div class="absolute left-0 inset-y-0 rounded-full" style="width: 30%; background: #FFB8DC"></div>
+						<div class="absolute left-0 inset-y-0 rounded-full transition-all" style="width: {word_progress / total_words_count * 100}%; background: #FFB8DC"></div>
 					</div>
 				{/if}
 			</div>
