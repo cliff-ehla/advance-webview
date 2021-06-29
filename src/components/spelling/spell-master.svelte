@@ -33,7 +33,6 @@
 	}
 
 	const endGame = async () => {
-		await sound.play('bonus-extra')
 		let result = phases.map((p,i) => ({
 			...p,
 			spelling_result: question_result[i]
@@ -60,8 +59,16 @@
 		all_audio_loaded = true
 		initQuestion()
 	})
+
+	const onKeydown = (e) => {
+		if (e.keyCode === 40) {
+			endGame()
+		}
+	}
 </script>
 
 {#if all_audio_loaded && render}
 	<Spell on:game-over={onGameOver} on:next={onNext} words={phase.words} phase_audio={phase.phase_audio} {hp} phase_idx={idx} {mode}/>
 {/if}
+
+<svelte:window on:keydown={onKeydown}/>
