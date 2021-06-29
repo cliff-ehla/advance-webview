@@ -4,6 +4,7 @@
 	import Icon from '../icon.svelte'
 	import {sound} from "./Sound";
 	import SpellMaster from './spell-master.svelte'
+	import EasyModeScoreBoard from './easy-mode-score-board.svelte'
 
 	export let mode
 	export let hp_count = 6
@@ -18,6 +19,7 @@
 	let question_result = []
 	let coin = 0
 	let word_progress = 0
+	let game_ended
 
 	// dom
 	let heart_els = []
@@ -237,6 +239,10 @@
 		sound.play('casino-notification')
 		dispatch('exit')
 	}
+
+	const onGameEnd = () => {
+		game_ended = true
+	}
 </script>
 
 <div bind:this={dialog_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -301,7 +307,11 @@
 		</div>
 	</div>
 	<div class="relative z-10">
-		<SpellMaster {phases} {hp} {mode} {question_result}/>
+		{#if game_ended}
+			<EasyModeScoreBoard on:again on:next/>
+		{:else}
+			<SpellMaster on:game-end={onGameEnd} {phases} {hp} {mode} {question_result}/>
+		{/if}
 	</div>
 
 	<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 202" fill="none" xmlns="http://www.w3.org/2000/svg">

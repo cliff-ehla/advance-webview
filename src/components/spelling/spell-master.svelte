@@ -5,7 +5,7 @@
 	export let mode
 
 	import Spell from './spell2.svelte'
-	import {onMount, getContext, tick} from 'svelte'
+	import {onMount, getContext, tick, createEventDispatcher} from 'svelte'
 	import {sound} from "./Sound";
 
 	let render = false
@@ -14,6 +14,7 @@
 
 	$: phase = phases[idx]
 
+	const dispatch = createEventDispatcher()
 	const {setCheckpointSuccess, setCheckpointActive} = getContext('spell-game-bar')
 
 	const onNext = e => {
@@ -41,7 +42,9 @@
 			type: 'spelling:result',
 			data: result
 		}
-		window.postMessage(JSON.stringify(message))
+
+		window.postMessage(JSON.stringify(message)) // TODO
+		dispatch('game-end')
 	}
 
 	const initQuestion = () => {
@@ -60,5 +63,5 @@
 </script>
 
 {#if all_audio_loaded && render}
-	<Spell on:game-over={onGameOver} on:next={onNext} words={phase.words} phase_audio={phase.phase_audio} {hp} phase_idx={idx} {mode}></Spell>
+	<Spell on:game-over={onGameOver} on:next={onNext} words={phase.words} phase_audio={phase.phase_audio} {hp} phase_idx={idx} {mode}/>
 {/if}
