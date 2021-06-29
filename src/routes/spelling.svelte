@@ -21,6 +21,15 @@
 		phases.forEach(v => {
 			v.phase = v.word
 			v.phase_audio = v.audio_path
+			if (!v.subwords) {
+				v.subwords = [
+					{
+						audio: v.audio_path,
+						audio_path: v.audio_path,
+						word: v.word
+					}
+				]
+			}
 			v.subwords.forEach(s => {
 				s.audio = s.audio_path
 			})
@@ -29,6 +38,7 @@
 				word: s.word
 			}))
 		})
+		console.log(phases)
 	}
 
 	const loadAudio = async () => {

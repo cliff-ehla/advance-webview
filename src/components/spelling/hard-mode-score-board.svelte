@@ -7,14 +7,18 @@
 	import AlphabetScore from './alphabet-score.svelte'
 	import Alphabet from './alphabet.svelte'
 	import ScoreSVG from './score-svg.svelte'
+	import Font from './font.svelte'
 	const dispatch = createEventDispatcher()
 
 	let panel_el
+	let score_el
 	let alphabet_score_el
 	let button_row_el
+	let review_words_el = []
+	let reviewed_word_count = 0
+	let score = 0
 
 	$: total_score = question_result.length
-	$: score = question_result.filter(r => r.result === true).length
 	$: derived_score = Math.ceil(score / total_score * 10)
 	$: {console.log(question_result, total_score, score)}
 
@@ -28,21 +32,49 @@
 		sound.play('casino-notification')
 	}
 
-	onMount(() => {
-		gsap.set([alphabet_score_el, button_row_el], {
-			autoAlpha: 0
-		})
-		sound.play('bonus-extra')
-		gsap.timeline().fromTo(panel_el, {
-			y: "+=100",
+	const reviewWords = (i) => {
+		gsap.timeline().fromTo(review_words_el[i], {
+			y: "+=150",
 			scale: 0
 		}, {
+			y: "-=150",
 			scale: 1,
-			y: "-=100",
 			autoAlpha: 1,
-			ease: "back.out",
-			duration: 0.35
-		}).fromTo(alphabet_score_el, {
+			duration: 0.3,
+			onComplete: async () => {
+				await sound.play(question_result[i].audio_path)
+
+				const is_correct = question_result[i].result
+				if (is_correct) {
+					score++
+					gsap.to(score_el, {
+						onStart: () => sound.play('extra-bonus'),
+						scale: 1.5,
+						yoyo: true,
+						repeat: 2,
+						duration: 0.5
+					})
+				} else {
+					gsap.to(review_words_el, {
+						onStart: () => sound.play('boom'),
+						scale: 0,
+						autoAlpha: 0,
+						y: "-=100",
+						duration: 1
+					})
+				}
+				reviewed_word_count++
+				if (reviewed_word_count < question_result.length) {
+					reviewWords(reviewed_word_count)
+				} else {
+					onReviewWordComplete()
+				}
+			}
+		})
+	}
+
+	const onReviewWordComplete = () => {
+		gsap.timeline().fromTo(alphabet_score_el, {
 			rotate: "-=30"
 		}, {
 			rotate: "+=30",
@@ -59,6 +91,27 @@
 				sound.play('changing-tab')
 			}
 		})
+	}
+
+	onMount(() => {
+		console.log(question_result)
+		gsap.set([alphabet_score_el, button_row_el, ...review_words_el], {
+			autoAlpha: 0
+		})
+		sound.play('bonus-extra')
+		gsap.timeline().fromTo(panel_el, {
+			y: "+=100",
+			scale: 0
+		}, {
+			scale: 1,
+			y: "-=100",
+			autoAlpha: 1,
+			ease: "back.out",
+			duration: 0.35,
+			onComplete: () => {
+				reviewWords(0)
+			}
+		})
 	})
 </script>
 
@@ -67,15 +120,24 @@
 		<ScoreSVG color="#918CF0"/>
 	</div>
 	<div class="relative font-bold border-4 px-8 pt-12 pb-4 border-purple-500 text-center" style="border-radius: 3em; background: #FAFAFA">
-		<div class="mb-4" bind:this={alphabet_score_el}>
-			<AlphabetScore score={derived_score}/>
+		<div class="mb-4 relative h-20">
+			{#each question_result as r, i}
+				<div bind:this={review_words_el[i]} class="absolute inset-0 flex items-center justify-center">
+					<Font word={r.word}/>
+				</div>
+			{/each}
+			<div bind:this={alphabet_score_el}>
+				<AlphabetScore score={derived_score}/>
+			</div>
 		</div>
 		<div class="grid gap-4 grid-cols-2 text-xl" bind:this={button_row_el}>
 			<button on:click={restartEasy} class="bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">訓練</button>
 			<button on:click={restartNormal} class="bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold" style="color: #F69CCA; background: #535AAB">再挑戰</button>
 		</div>
 		<div class="absolute top-4 right-4 flex items-center">
-			<Alphabet char={score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>
+			<div bind:this={score_el}>
+				<Alphabet char={score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>
+			</div>
 			<Alphabet char="/" height_class="h-4" text_color="white" stroke_color="#918CF0"/>
 			<Alphabet char={total_score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>
 		</div>
