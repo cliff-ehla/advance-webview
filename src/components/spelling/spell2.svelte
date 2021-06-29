@@ -644,9 +644,15 @@
 	const onKeydown = e => {
 		const code = e.keyCode
 		if (code === 37) { // left
-			left()
+			// left()
+			hideChain(async () => {
+				setCheckpointFail(phase_idx)
+				nextPhase()
+			})
 		} else if (code === 39) { // right
-			right()
+			setCheckpointSuccess(phase_idx, () => {
+				nextPhase()
+			})
 		} else if (code === 38) { // up
 
 		} else if (code === 40) { // down

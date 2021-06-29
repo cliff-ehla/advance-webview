@@ -1,4 +1,6 @@
 <script>
+	export let question_result
+
 	import gsap from 'gsap'
 	import {sound} from './Sound'
 	import {createEventDispatcher, onMount} from 'svelte'
@@ -8,6 +10,11 @@
 	const dispatch = createEventDispatcher()
 
 	let panel_el
+
+	$: total_score = question_result.length
+	$: score = question_result.filter(r => r.result === true).length
+	$: derived_score = Math.ceil(score / total_score * 10)
+	$: {console.log(question_result, total_score, score)}
 
 	onMount(() => {
 		sound.play('bonus-extra')
@@ -30,16 +37,16 @@
 	</div>
 	<div class="relative font-bold border-4 px-8 pt-12 pb-4 border-purple-500 text-center" style="border-radius: 3em; background: #FAFAFA">
 		<div class="mb-4">
-			<AlphabetScore score="8"/>
+			<AlphabetScore score={derived_score}/>
 		</div>
 		<div class="grid gap-4 grid-cols-2 text-xl">
 			<button on:click={() => {dispatch('restart-easy')}} class="bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">訓練</button>
 			<button on:click={() => {dispatch('restart-normal')}} class="bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold" style="color: #F69CCA; background: #535AAB">再挑戰</button>
 		</div>
 		<div class="absolute top-4 right-4 flex items-center">
-			<Alphabet char="5" height_class="h-6" text_color="white" stroke_color="#918CF0"/>
+			<Alphabet char={score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>
 			<Alphabet char="/" height_class="h-4" text_color="white" stroke_color="#918CF0"/>
-			<Alphabet char="6" height_class="h-6" text_color="white" stroke_color="#918CF0"/>
+			<Alphabet char={total_score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>
 		</div>
 	</div>
 </div>

@@ -33,16 +33,6 @@
 	}
 
 	const endGame = async () => {
-		let result = phases.map((p,i) => ({
-			...p,
-			spelling_result: question_result[i]
-		}))
-		const message = {
-			type: 'spelling:result',
-			data: result
-		}
-
-		window.postMessage(JSON.stringify(message)) // TODO
 		dispatch('game-end')
 	}
 

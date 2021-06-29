@@ -17,6 +17,16 @@
 
 	$: derived_score = Math.ceil(heart_left / 6 * 10)
 
+	const restartEasy = () => {
+		dispatch('restart-easy')
+		sound.play('casino-notification')
+	}
+
+	const restartNormal = () => {
+		dispatch('restart-normal')
+		sound.play('casino-notification')
+	}
+
 	onMount(() => {
 		gsap.set([alphabet_score_el, button_row_el], {
 			autoAlpha: 0
@@ -93,8 +103,8 @@
 			</div>
 		</div>
 		<div bind:this={button_row_el} class="grid gap-4 grid-cols-2 text-xl">
-			<button on:click={() => {dispatch('restart-easy')}} class="bg-white text-red-500 border-red-500 border-2 px-8 py-4 rounded-full font-bold">再玩</button>
-			<button on:click={() => {dispatch('restart-normal')}} class="bg-red-500 text-white px-4 py-4 rounded-full font-bold">下一關</button>
+			<button on:click={restartEasy} class="bg-white text-red-500 border-red-500 border-2 px-8 py-4 rounded-full font-bold">再玩</button>
+			<button on:click={restartNormal} class="bg-red-500 text-white px-4 py-4 rounded-full font-bold">下一關</button>
 		</div>
 	</div>
 </div>

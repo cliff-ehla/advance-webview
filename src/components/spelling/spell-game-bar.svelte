@@ -71,9 +71,15 @@
 		})
 	}
 
+	const saveResult = (i, is_correct) => {
+		let obj = phases[i]
+		obj.result = is_correct
+		question_result[i] = obj
+		console.log('saveResult', question_result)
+	}
+
 	const setCheckpointSuccess = (i, cb) => {
-		console.log('setCheckpointSuccess')
-		question_result[i] = true
+		saveResult(i, true)
 		sound.play('treasure')
 		gsap.killTweensOf([star_els[i], star_holder_els[i]])
 		gsap.set(star_holder_els[i], {autoAlpha: 0})
@@ -97,7 +103,7 @@
 	}
 
 	const setCheckpointFail = i => {
-		question_result[i] = false
+		saveResult(i, false)
 		sound.play('negative-guitar-tone')
 		gsap.killTweensOf([star_els[i], star_holder_els[i]])
 		gsap.set(star_holder_els[i], {
@@ -243,6 +249,11 @@
 
 	const onGameEnd = () => {
 		game_ended = true
+		const message = {
+			type: 'spelling:result',
+			data: question_result
+		}
+		window.postMessage(JSON.stringify(message))
 	}
 </script>
 
@@ -312,7 +323,7 @@
 			{#if mode === 'easy'}
 				<EasyModeScoreBoard heart_left={hp} on:restart-easy on:restart-normal/>
 			{:else if mode === 'normal'}
-				<HardModeScoreBoard on:restart-easy on:restart-normal/>
+				<HardModeScoreBoard {question_result} on:restart-easy on:restart-normal/>
 			{/if}
 		{:else}
 			<SpellMaster on:game-end={onGameEnd} {phases} {hp} {mode} {question_result}/>
