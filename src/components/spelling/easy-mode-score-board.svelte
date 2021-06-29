@@ -15,6 +15,8 @@
 	let heart_score_point_els = []
 	let coin_score_point_els = []
 
+	$: derived_score = Math.ceil(heart_left / 6 * 10)
+
 	onMount(() => {
 		gsap.set([alphabet_score_el, button_row_el], {
 			autoAlpha: 0
@@ -58,13 +60,6 @@
 			}
 		})
 	})
-
-	const addHeartScore = () => {
-		const points = heart_score_point_els.slice(0, heart_left)
-		gsap.to(points, {
-			background: 'red'
-		})
-	}
 </script>
 
 <div bind:this={panel_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -75,7 +70,7 @@
 		<div class="grid grid-cols-2 gap-4 mb-4">
 			<div>
 				<div bind:this={alphabet_score_el}>
-					<AlphabetScore stroke_color="#ED7182" text_color="#FFF8E5" score="8"/>
+					<AlphabetScore stroke_color="#ED7182" text_color="#FFF8E5" score={derived_score}/>
 				</div>
 			</div>
 			<div>
