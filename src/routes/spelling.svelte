@@ -60,7 +60,7 @@
 		else phases = JSON.parse(decodeURIComponent(phases))
 		convertData()
 		await loadAudio()
-		// selected_mode = 'easy'
+		// selected_mode = 'normal'
 	})
 
 	const introAnimation = () => {
@@ -100,16 +100,10 @@
 		introAnimation()
 	}
 
-	const onAgain = async () => {
+	const restart = async (mode) => {
 		selected_mode = null
 		await tick()
-		selected_mode = 'easy'
-	}
-
-	const onNext = async () => {
-		selected_mode = null
-		await tick()
-		selected_mode = 'normal'
+		selected_mode = mode
 	}
 
 	const onBack = () => {
@@ -126,7 +120,7 @@
 </script>
 
 {#if selected_mode}
-	<SpellGameBar on:again={onAgain} on:next={onNext} on:exit={onExit} phases={phases} mode={selected_mode}/>
+	<SpellGameBar on:restart-easy={() => restart('easy')} on:restart-normal={() => restart('normal')} on:exit={onExit} phases={phases} mode={selected_mode}/>
 {:else}
 	<svg on:click={onBack} class="z-30 fixed left-4 top-4 w-10" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M22.6213 8.12132C23.7929 6.94975 23.7929 5.05025 22.6213 3.87868C21.4497 2.70711 19.5503 2.70711 18.3787 3.87868L3.87868 18.3787C2.72112 19.5362 2.70526 21.4081 3.84304 22.5851L18.343 37.5851C19.4946 38.7763 21.3938 38.8085 22.5851 37.657C23.7763 36.5054 23.8085 34.6062 22.657 33.4149L13.5559 24H35.5C37.1569 24 38.5 22.6569 38.5 21C38.5 19.3431 37.1569 18 35.5 18H12.7426L22.6213 8.12132Z" fill="white"/>

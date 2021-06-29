@@ -5,6 +5,7 @@
 	import {sound} from "./Sound";
 	import SpellMaster from './spell-master.svelte'
 	import EasyModeScoreBoard from './easy-mode-score-board.svelte'
+	import HardModeScoreBoard from './hard-mode-score-board.svelte'
 
 	export let mode
 	export let hp_count = 6
@@ -19,7 +20,7 @@
 	let question_result = []
 	let coin = 0
 	let word_progress = 0
-	let game_ended
+	let game_ended = false
 
 	// dom
 	let heart_els = []
@@ -308,7 +309,11 @@
 	</div>
 	<div class="relative z-10">
 		{#if game_ended}
-			<EasyModeScoreBoard on:again on:next/>
+			{#if mode === 'easy'}
+				<EasyModeScoreBoard on:restart-easy on:restart-normal/>
+			{:else if mode === 'normal'}
+				<HardModeScoreBoard on:restart-easy on:restart-normal/>
+			{/if}
 		{:else}
 			<SpellMaster on:game-end={onGameEnd} {phases} {hp} {mode} {question_result}/>
 		{/if}
