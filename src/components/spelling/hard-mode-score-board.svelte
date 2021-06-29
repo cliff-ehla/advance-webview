@@ -16,6 +16,16 @@
 	$: derived_score = Math.ceil(score / total_score * 10)
 	$: {console.log(question_result, total_score, score)}
 
+	const restartEasy = () => {
+		dispatch('restart-easy')
+		sound.play('casino-notification')
+	}
+
+	const restartNormal = () => {
+		dispatch('restart-normal')
+		sound.play('casino-notification')
+	}
+
 	onMount(() => {
 		sound.play('bonus-extra')
 		gsap.fromTo(panel_el, {
@@ -40,8 +50,8 @@
 			<AlphabetScore score={derived_score}/>
 		</div>
 		<div class="grid gap-4 grid-cols-2 text-xl">
-			<button on:click={() => {dispatch('restart-easy')}} class="bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">訓練</button>
-			<button on:click={() => {dispatch('restart-normal')}} class="bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold" style="color: #F69CCA; background: #535AAB">再挑戰</button>
+			<button on:click={restartEasy} class="bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">訓練</button>
+			<button on:click={restartNormal} class="bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold" style="color: #F69CCA; background: #535AAB">再挑戰</button>
 		</div>
 		<div class="absolute top-4 right-4 flex items-center">
 			<Alphabet char={score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>

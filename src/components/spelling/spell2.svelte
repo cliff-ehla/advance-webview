@@ -60,6 +60,7 @@
 								} else {
 									addHeart()
 									addProgress()
+									sound.play('treasure')
 									nextPhase()
 								}
 							} else {
@@ -544,7 +545,11 @@
 	const word_introduction = (_word_index, cb) => {
 		sound.stop(words_2[_word_index].audio)
 		sound.play(words_2[_word_index].audio)
-		flash_watermark_hints(chain_els[word_index], watermark_char_els[word_index], 0.08, cb)
+		if (mode === 'easy') {
+			flash_watermark_hints(chain_els[word_index], watermark_char_els[word_index], 0.08, cb)
+		} else {
+			if (cb) cb()
+		}
 	}
 
 	const flash_watermark_hints = (_chain_els, _watermark_els, stagger_duration, cb) => {
