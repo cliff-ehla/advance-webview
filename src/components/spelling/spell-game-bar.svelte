@@ -310,7 +310,7 @@
 	<div class="relative z-10">
 		{#if game_ended}
 			{#if mode === 'easy'}
-				<EasyModeScoreBoard on:restart-easy on:restart-normal/>
+				<EasyModeScoreBoard heart_left={hp} on:restart-easy on:restart-normal/>
 			{:else if mode === 'normal'}
 				<HardModeScoreBoard on:restart-easy on:restart-normal/>
 			{/if}
