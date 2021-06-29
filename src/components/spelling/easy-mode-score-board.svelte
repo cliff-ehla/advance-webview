@@ -1,19 +1,36 @@
 <script>
 	import ScoreSVG from './score-svg.svelte'
-	import {createEventDispatcher} from 'svelte'
+	import AlphabetScore from './alphabet-score.svelte'
+	import {createEventDispatcher, onMount} from 'svelte'
+	import {sound} from "./Sound";
+	import gsap from "gsap";
 	const dispatch = createEventDispatcher()
-	const onAgain = () => dispatch('restart-easy')
-	const onNext = () => dispatch('restart-normal')
+
+	let panel_el
+
+	onMount(() => {
+		sound.play('bonus-extra')
+		gsap.fromTo(panel_el, {
+			y: "+=100",
+			scale: 0
+		}, {
+			scale: 1,
+			y: "-=100",
+			autoAlpha: 1,
+			ease: "back.out",
+			duration: 0.35
+		})
+	})
 </script>
 
-<div class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+<div bind:this={panel_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 	<div class="flex justify-center -mb-6">
-		<ScoreSVG color="#918CF0"/>
+		<ScoreSVG color="#ED7182"/>
 	</div>
 	<div class="font-bold border-4 px-8 pt-12 pb-4 border-red-500 text-center" style="border-radius: 3em; background: #FAFAFA">
 		<div class="grid grid-cols-2 gap-4 mb-4">
 			<div>
-				<img src="/image/spelling/B+.png" alt="heart">
+				<AlphabetScore stroke_color="#ED7182" text_color="#FFF8E5" score="8"/>
 			</div>
 			<div>
 				<div class="flex items-center mb-2">
