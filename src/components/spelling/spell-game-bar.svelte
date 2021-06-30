@@ -250,7 +250,7 @@
 	const onGameEnd = () => {
 		game_ended = true
 		const message = {
-			type: 'spelling:result',
+			type: 'result',
 			data: question_result
 		}
 		window.postMessage(JSON.stringify(message))

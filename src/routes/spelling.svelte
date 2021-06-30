@@ -118,7 +118,7 @@
 
 	const onBack = () => {
 		const message = {
-			type: 'spelling:exit'
+			type: 'exit'
 		}
 		window.postMessage(JSON.stringify(message))
 	}
@@ -139,11 +139,11 @@
 	<div class="relative w-screen h-screen flex items-center justify-center px-12" style="background-image: linear-gradient(#FDFFE8,#FBFFCA)">
 		<div class="relative z-10 grid gap-8 grid-cols-2">
 			<div on:touchstart={() => {onSelect('easy')}} class="relative flex justify-center">
-				<img on:load={onImageLoad} bind:this={left_card} src="image/spelling/easy-card.png" alt="card" class="w-64 opacity-0">
+				<div bind:this={left_card} class="w-64 opacity-0 bg-contain bg-no-repeat" style="background-image: url('image/spelling/easy-card.png'); padding-top: 120%"></div>
 				<img on:load={onImageLoad} bind:this={left_button} src="image/spelling/easy-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-12 opacity-0">
 			</div>
 			<div on:touchstart={() => {onSelect('normal')}} class="relative flex justify-center">
-				<img on:load={onImageLoad} bind:this={right_card} src="image/spelling/hard-card.png" alt="card" class="w-64 opacity-0">
+				<div bind:this={right_card} class="w-64 opacity-0 bg-contain bg-no-repeat" style="background-image: url('image/spelling/hard-card.png'); padding-top: 120%"></div>
 				<img on:load={onImageLoad} bind:this={right_button} src="image/spelling/hard-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-20 opacity-0">
 			</div>
 		</div>
