@@ -284,6 +284,7 @@
 	}
 
 	const moveToChain = (el, cb) => {
+		console.log('move to chain',  char_index, getCurrentStepLastIdx())
 		if (mode === 'easy' && char_index > getCurrentStepLastIdx()) return
 		sound.play('ball-tap')
 		const is_correct = verifyChar(el.getAttribute('data-char'))
@@ -526,6 +527,7 @@
 								prepareStage()
 							})
 						} else {
+							highlightSteps()
 							prepareStage()
 						}
 					}
