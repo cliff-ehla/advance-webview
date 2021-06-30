@@ -661,9 +661,8 @@
 				nextPhase()
 			})
 		} else if (code === 38) { // up
-
+			dispatch('game-over')
 		} else if (code === 40) { // down
-
 		}
 	}
 </script>

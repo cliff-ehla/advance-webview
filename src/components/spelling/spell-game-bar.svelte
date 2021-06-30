@@ -6,6 +6,7 @@
 	import SpellMaster from './spell-master.svelte'
 	import EasyModeScoreBoard from './easy-mode-score-board.svelte'
 	import HardModeScoreBoard from './hard-mode-score-board.svelte'
+	import GameOverDialog from './gameover-dialog.svelte'
 
 	export let mode
 	export let hp_count = 6
@@ -21,6 +22,7 @@
 	let coin = 0
 	let word_progress = 0
 	let game_ended = false
+	let game_overed = false // only in easy mode
 
 	// dom
 	let heart_els = []
@@ -255,6 +257,11 @@
 		}
 		window.postMessage(JSON.stringify(message))
 	}
+
+	const onGameOver = () => {
+		game_overed = true
+
+	}
 </script>
 
 <div bind:this={dialog_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -325,8 +332,10 @@
 			{:else if mode === 'normal'}
 				<HardModeScoreBoard {question_result} on:restart-easy on:restart-normal/>
 			{/if}
+		{:else if game_overed}
+			<GameOverDialog on:restart-easy/>
 		{:else}
-			<SpellMaster on:game-end={onGameEnd} {phases} {hp} {mode} {question_result}/>
+			<SpellMaster on:game-over={onGameOver} on:game-end={onGameEnd} {phases} {hp} {mode} {question_result}/>
 		{/if}
 	</div>
 
