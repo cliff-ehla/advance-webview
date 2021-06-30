@@ -556,6 +556,7 @@
 	}
 
 	const flash_watermark_hints = (_chain_els, _watermark_els, stagger_duration, cb) => {
+		stagger_duration = stagger_duration || 0.15 // just provide a fallback duration if not given (when audio duration is not known)
 		const each_duration = stagger_duration * 2
 		if (!cb) cb = () => {}
 		gsap.to(_chain_els, {
