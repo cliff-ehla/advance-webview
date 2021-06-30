@@ -10,7 +10,7 @@
 	let test = [
 		{
 			"id": "47491",
-			"word": "Don't",
+			"word": "grandmother",
 			"description": "n. 太陽能",
 			"description_alter": "n. 太陽能",
 			"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-47cf16cec79dedf889fefd2d4645737e-1624248816.mp3",

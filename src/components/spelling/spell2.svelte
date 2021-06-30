@@ -45,7 +45,6 @@
 
 		if (location === 'stage') {
 			moveToChain(e.target, async () => {
-				addNextBenchCharToStage()
 				if (mode === 'easy') {
 					if (getToBeVerifyCharCount() === getStepLength()) {
 						const is_correct = verifyToBeVerifyWord()
@@ -53,6 +52,7 @@
 							completeSteps()
 							await tick()
 							if (getStepLength() === 0) {
+								// when the word (or phase) is finished
 								if (word_index < words_2.length - 1) {
 									addHeart()
 									addProgress()
@@ -64,7 +64,9 @@
 									nextPhase()
 								}
 							} else {
+								// when the required steps are finished
 								highlightSteps()
+								prepareStage()
 							}
 						} else {
 							lessHeart()
@@ -78,6 +80,7 @@
 						}
 					}
 				} else if (mode === 'normal') {
+					addNextBenchCharToStage()
 					if (isAllCharAnimatedToStage()) {
 						const is_correct = verifyWord()
 						if (is_correct) {
@@ -184,7 +187,7 @@
 			let next_char = getNextChar()
 			let all_char_on_stage = getStageChars().map(el => el.getAttribute("data-char"))
 			let is_on_stage = all_char_on_stage.includes(next_char)
-			console.log(`next char: ${next_char}, all_char_on_stage: ${all_char_on_stage}, is_on_stage: ${is_on_stage}`)
+			// console.log(`next char: ${next_char}, all_char_on_stage: ${all_char_on_stage}, is_on_stage: ${is_on_stage}`)
 			let selected_bench_el
 			if (is_on_stage) {
 				selected_bench_el = pickRandom(bench_chars)
@@ -285,7 +288,7 @@
 	}
 
 	const moveToChain = (el, cb) => {
-		console.log('move to chain',  char_index, getCurrentStepLastIdx())
+		// console.log('move to chain',  char_index, getCurrentStepLastIdx())
 		if (mode === 'easy' && char_index > getCurrentStepLastIdx()) return
 		sound.play('ball-tap')
 		const is_correct = verifyChar(el.getAttribute('data-char'))
@@ -333,7 +336,8 @@
 		word_char_els.forEach((el,i) => {
 			setTimeout(() => {
 				sound.play('tap')
-				moveToStage(el, i, () => {
+				let target_idx = pickRandom(getEmptyStageIdx())
+				moveToStage(el, target_idx, () => {
 					if (i === word_char_els.length - 1) {
 						if (cb) cb()
 					}
@@ -431,14 +435,16 @@
 	const getEssentialCharElFromBench = () => {
 		let chars = words_2[word_index].all_chars
 		let unoccupied_idx = getUnoccupiedChainIdx()
-		let required_unoccupied_idx = unoccupied_idx.length > 2 ? unoccupied_idx.slice(0,2) : unoccupied_idx
+		let required_unoccupied_idx = unoccupied_idx.length > 3 ? unoccupied_idx.slice(0,3) : unoccupied_idx
 		let required_unoccupied_char = required_unoccupied_idx.map(i => chars[i])
+		let chars_on_stage = getStageChars().map(el => el.getAttribute('data-char'))
+		required_unoccupied_char = required_unoccupied_char.filter(char => !chars_on_stage.includes(char))
 		let bench_el = getBenchChars()
 		let required_unoccupied_el = required_unoccupied_char.map(char => bench_el.find(el => el.getAttribute("data-char") === char))
 
 		const other_remaining_bench_el = bench_el.filter(el => !required_unoccupied_el.includes(el))
 		let empty_stage_count = getEmptyStageCount()
-		let essential_char_count = required_unoccupied_idx.length
+		let essential_char_count = required_unoccupied_char.length
 		let random_select_count = empty_stage_count - essential_char_count
 		const random_select_from_other = shuffle(other_remaining_bench_el).slice(0, random_select_count)
 		return shuffle([...required_unoccupied_el, ...random_select_from_other])
