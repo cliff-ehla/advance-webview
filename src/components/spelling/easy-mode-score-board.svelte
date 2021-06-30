@@ -109,7 +109,7 @@
 					</div>
 				</div>
 				<div class="flex items-center">
-					<div class="h-8 w-8 flex-shrink-0 items-center justify-center flex bg-center bg-contain bg-no-repeat" style="background-image: url('/image/spelling/coin.png')"></div>
+					<div class="h-8 w-8 flex-shrink-0 items-center justify-center flex bg-center bg-contain bg-no-repeat" style="background-image: url('/image/spelling/arrow.png')"></div>
 					<div class="ml-2 flex">
 						{#each [0,1,2,3,4,5] as i}
 							<div bind:this={combo_point_els[i]} style="border-color: #E7961A" class="h-5 w-2.5 bg-white border-2 mx-0.5 rounded-sm"></div>

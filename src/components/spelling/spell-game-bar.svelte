@@ -7,6 +7,7 @@
 	import EasyModeScoreBoard from './easy-mode-score-board.svelte'
 	import HardModeScoreBoard from './hard-mode-score-board.svelte'
 	import GameOverDialog from './gameover-dialog.svelte'
+	import Alphabet from './alphabet.svelte'
 
 	export let mode
 	export let hp_count = 6
@@ -27,7 +28,6 @@
 	// save the status
 	let hp = hp_count
 	let question_result = []
-	let coin = 0
 	let combo = 0
 	let max_combo = 0
 	let word_progress = 0
@@ -299,8 +299,8 @@
 			</div>
 			{#if mode === 'easy'}
 				<div class="ml-4 inline-flex items-center">
-					<img class="h-10" src="/image/spelling/coin.png" alt="coin">
-					<p class="font-bold ml-1 text-white" style="font-size: 1.3em">{combo}</p>
+					<img class="h-10" src="/image/spelling/arrow.png" alt="coin">
+					<Alphabet char={combo} height_class="h-8" stroke_color="#59B7FF" text_color="#FAFF00"/>
 				</div>
 			{/if}
 		</div>
