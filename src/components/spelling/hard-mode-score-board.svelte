@@ -40,7 +40,7 @@
 			y: "-=150",
 			scale: 1,
 			autoAlpha: 1,
-			duration: 0.3,
+			duration: 0.6,
 			onComplete: async () => {
 				await sound.play(question_result[i].audio_path)
 
@@ -48,20 +48,35 @@
 				if (is_correct) {
 					score++
 					gsap.to(score_el, {
-						onStart: () => sound.play('extra-bonus'),
-						scale: 1.5,
+						scaleY: 0,
+						duration: 0.25,
 						yoyo: true,
-						repeat: 2,
+						repeat: 1
+					})
+					gsap.to(review_words_el[i], {
+						autoAlpha: 0,
 						duration: 0.5
 					})
+					await sound.play('extra-bonus')
 				} else {
 					gsap.to(review_words_el, {
-						onStart: () => sound.play('boom'),
-						scale: 0,
 						autoAlpha: 0,
-						y: "-=100",
-						duration: 1
+						duration: 0.6
 					})
+					gsap.timeline().to(review_words_el, {
+						rotate: "-=30",
+						duration: 0.15
+					}).to(review_words_el, {
+						rotate: "+=30",
+						duration: 0.15
+					}).to(review_words_el, {
+						rotate: "-=15",
+						duration: 0.15
+					}).to(review_words_el, {
+						rotate: "+=15",
+						duration: 0.15
+					})
+					await sound.play('wrong-electricity-buzz')
 				}
 				reviewed_word_count++
 				if (reviewed_word_count < question_result.length) {
@@ -98,7 +113,7 @@
 		gsap.set([alphabet_score_el, button_row_el, ...review_words_el], {
 			autoAlpha: 0
 		})
-		sound.play('bonus-extra')
+		// sound.play('bonus-extra')
 		gsap.timeline().fromTo(panel_el, {
 			y: "+=100",
 			scale: 0
