@@ -1,6 +1,7 @@
 <script>
 	export let heart_left
-	export let coins
+	export let max_combo
+	export let total_char_count
 
 	import ScoreSVG from './score-svg.svelte'
 	import AlphabetScore from './alphabet-score.svelte'
@@ -13,9 +14,15 @@
 	let alphabet_score_el
 	let button_row_el = []
 	let heart_score_point_els = []
-	let coin_score_point_els = []
+	let combo_point_els = []
 
-	$: derived_score = Math.ceil(heart_left / 6 * 10)
+	$: combo_points = Math.ceil(max_combo / total_char_count * 6)
+	$: heart_points = heart_left
+	$: derived_score = Math.ceil((heart_points + combo_points) / 2 / 6 * 10)
+
+	$: {
+		console.log(max_combo, total_char_count, combo_points, derived_score)
+	}
 
 	const restartEasy = () => {
 		dispatch('restart-easy')
@@ -32,7 +39,7 @@
 			autoAlpha: 0
 		})
 		const heart_points_el = heart_score_point_els.slice(0, heart_left)
-		console.log('heart_points_el', heart_points_el)
+		const combo_points_el = combo_point_els.slice(0, combo_points)
 		sound.play('bonus-extra')
 		gsap.timeline().fromTo(panel_el, {
 			y: "+=100",
@@ -44,6 +51,15 @@
 			ease: "back.out",
 			duration: 0.35
 		}).to(heart_points_el, {
+			background: "#FCA5D1",
+			duration: 0.1,
+			stagger: {
+				each: 0.1,
+				onComplete: () => {
+					sound.play('collected-coin')
+				}
+			}
+		}).to(combo_points_el, {
 			background: "#FCA5D1",
 			duration: 0.1,
 			stagger: {
@@ -96,7 +112,7 @@
 					<div class="h-8 w-8 flex-shrink-0 items-center justify-center flex bg-center bg-contain bg-no-repeat" style="background-image: url('/image/spelling/coin.png')"></div>
 					<div class="ml-2 flex">
 						{#each [0,1,2,3,4,5] as i}
-							<div bind:this={coin_score_point_els[i]} style="border-color: #E7961A" class="h-5 w-2.5 bg-white border-2 mx-0.5 rounded-sm"></div>
+							<div bind:this={combo_point_els[i]} style="border-color: #E7961A" class="h-5 w-2.5 bg-white border-2 mx-0.5 rounded-sm"></div>
 						{/each}
 					</div>
 				</div>

@@ -15,11 +15,21 @@
 	const dispatch = createEventDispatcher()
 
 	$: total_words_count = phases.reduce((a,c) => a += c.words.length, 0)
+	$: total_char_count = phases.reduce((a,c) => {
+		let words = c.words.map(w => w.word)
+		let total_char = 0
+		words.forEach(w => {
+			total_char += w.length
+		})
+		return a += total_char
+	}, 0)
 
 	// save the status
 	let hp = hp_count
 	let question_result = []
 	let coin = 0
+	let combo = 0
+	let max_combo = 0
 	let word_progress = 0
 	let game_ended = false
 	let game_overed = false // only in easy mode
@@ -177,11 +187,15 @@
 		hp++
 	}
 
-	const addCoin = () => {
-		sound.play('game-coin-touch')
-		setTimeout(() => sound.play('game-coin-touch'), 250)
-		setTimeout(() => sound.play('game-coin-touch'), 500)
-		coin += 100
+	const addCombo = (count) => {
+		sound.play('collected-coin')
+		combo += count
+		max_combo = Math.max(combo, max_combo)
+	}
+
+	const endCombo = () => {
+		max_combo = Math.max(combo, max_combo)
+		combo = 0
 	}
 
 	const addProgress = () => {
@@ -195,8 +209,9 @@
 		setCheckpointSuccess,
 		addHeart,
 		lessHeart,
-		addCoin,
-		addProgress
+		addProgress,
+		addCombo,
+		endCombo
 	})
 
 	onMount(() => {
@@ -285,7 +300,7 @@
 			{#if mode === 'easy'}
 				<div class="ml-4 inline-flex items-center">
 					<img class="h-10" src="/image/spelling/coin.png" alt="coin">
-					<p class="font-bold ml-1 text-white" style="font-size: 1.3em">{coin}</p>
+					<p class="font-bold ml-1 text-white" style="font-size: 1.3em">{combo}</p>
 				</div>
 			{/if}
 		</div>
@@ -328,7 +343,7 @@
 	<div class="relative z-10">
 		{#if game_ended}
 			{#if mode === 'easy'}
-				<EasyModeScoreBoard heart_left={hp} on:restart-easy on:restart-normal/>
+				<EasyModeScoreBoard heart_left={hp} {max_combo} {total_char_count} on:restart-easy on:restart-normal/>
 			{:else if mode === 'normal'}
 				<HardModeScoreBoard {question_result} on:restart-easy on:restart-normal/>
 			{/if}

@@ -12,7 +12,7 @@
 	export let phase_idx
 	export let mode
 
-	const {lessHeart, addHeart, setCheckpointActive, setCheckpointDanger, setCheckpointFail, setCheckpointSuccess, addCoin, addProgress} = getContext('spell-game-bar')
+	const {lessHeart, addHeart, setCheckpointActive, setCheckpointDanger, setCheckpointFail, setCheckpointSuccess, addProgress, addCombo, endCombo} = getContext('spell-game-bar')
 	const dispatch  = createEventDispatcher()
 	let words_2 = []
 	const MAX_STAGE_CHARS = 5
@@ -70,6 +70,7 @@
 							}
 						} else {
 							lessHeart()
+							endCombo()
 							if (hp === 1) {
 								dispatch('game-over')
 							} else {
@@ -331,11 +332,12 @@
 		el.setAttribute('data-animated-to-stage', -1)
 	}
 
-	const prepareStage = (cb) => {
+	const prepareStage = (cb, config) => {
+		let mute = config ? config.mute: false
 		let word_char_els = getEssentialCharElFromBench()
 		word_char_els.forEach((el,i) => {
 			setTimeout(() => {
-				sound.play('tap')
+				if (mute) sound.play('tap')
 				let target_idx = pickRandom(getEmptyStageIdx())
 				moveToStage(el, target_idx, () => {
 					if (i === word_char_els.length - 1) {
@@ -535,7 +537,7 @@
 							})
 						} else {
 							highlightSteps()
-							prepareStage()
+							prepareStage(null, {mute: true})
 						}
 					}
 				})
@@ -624,9 +626,10 @@
 		})
 		gsap.killTweensOf(active_chain_els)
 		gsap.set(active_chain_els, {
-			background: 'white'
+			background: '#f0f0f0'
 		})
-		addCoin()
+		addCombo(3) // TODO
+		//addCoin()
 	}
 
 	const getStepLength = () => {
@@ -637,7 +640,6 @@
 	}
 
 	const highlightSteps = () => {
-		sound.play('bonus-earned')
 		let start = chain_els[word_index].map(el => el.getAttribute('data-step-status')).lastIndexOf('complete') + 1
 		let length = getStepLength()
 		const targets = chain_els[word_index].slice(start, start + length)
