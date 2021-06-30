@@ -7,6 +7,19 @@
 
 	let started = false
 
+	let test = [
+		{
+			"id": "47491",
+			"word": "grandmother",
+			"description": "n. 太陽能",
+			"description_alter": "n. 太陽能",
+			"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-47cf16cec79dedf889fefd2d4645737e-1624248816.mp3",
+			"image_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202106/17/solarpower_1623903013650.jpg"
+		}
+	]
+
+	query = encodeURIComponent(JSON.stringify(test))
+
 	const question_result = [
 		{
 			word: "solar power",
@@ -39,4 +52,4 @@
 	<Board {question_result}/>
 {/if}
 <a class="p-4 block hidden" href="/spelling"></a>
-<a class="p-4 block" href="/spelling{query}">Start game</a>
+<a class="p-4 block" href="/spelling?words={query}">Start game</a>

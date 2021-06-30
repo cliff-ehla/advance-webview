@@ -225,6 +225,7 @@
 				})
 			} else {
 				moveToBench(el)
+				updateCharIdx()
 			}
 		})
 	}
