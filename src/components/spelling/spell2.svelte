@@ -337,7 +337,7 @@
 		let word_char_els = getEssentialCharElFromBench()
 		word_char_els.forEach((el,i) => {
 			setTimeout(() => {
-				if (mute) sound.play('tap')
+				if (!mute) sound.play('tap')
 				let target_idx = pickRandom(getEmptyStageIdx())
 				moveToStage(el, target_idx, () => {
 					if (i === word_char_els.length - 1) {
@@ -628,8 +628,7 @@
 		gsap.set(active_chain_els, {
 			background: '#f0f0f0'
 		})
-		addCombo(3) // TODO
-		//addCoin()
+		addCombo(active_chain_els.length)
 	}
 
 	const getStepLength = () => {

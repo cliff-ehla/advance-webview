@@ -41,6 +41,7 @@
 	let star_broken_els = []
 	let dialog_el
 	let dialog_backdrop_el
+	let combo_score_el
 
 	const setCheckpointActive = (i, cb) => {
 		if (!cb) cb = () => {}
@@ -189,8 +190,17 @@
 
 	const addCombo = (count) => {
 		sound.play('collected-coin')
-		combo += count
 		max_combo = Math.max(combo, max_combo)
+		gsap.timeline().to(combo_score_el, {
+			scaleY: 0,
+			duration: 0.2,
+			onComplete: () => {
+				combo += count
+			}
+		}).to(combo_score_el, {
+			scaleY: 1,
+			duration: 0.2
+		})
 	}
 
 	const endCombo = () => {
@@ -300,7 +310,13 @@
 			{#if mode === 'easy'}
 				<div class="ml-4 inline-flex items-center">
 					<img class="h-10" src="/image/spelling/arrow.png" alt="coin">
-					<Alphabet char={combo} height_class="h-8" stroke_color="#59B7FF" text_color="#FAFF00"/>
+					<div class="flex" bind:this={combo_score_el}>
+						{#each String(combo).split('') as char}
+							<div class="-mx-0.5">
+								<Alphabet {char} height_class="h-8" stroke_color="#59B7FF" text_color="#FAFF00"/>
+							</div>
+						{/each}
+					</div>
 				</div>
 			{/if}
 		</div>
