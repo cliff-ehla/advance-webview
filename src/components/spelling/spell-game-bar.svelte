@@ -94,10 +94,10 @@
 			duration: 0.5
 		}).to(star, {
 			scale: 2,
-			duration: 1,
+			duration: 0.5,
 		}).to(star, {
 			scale: 1,
-			duration: 0.8,
+			duration: 0.3,
 			onComplete: cb
 		})
 	}
