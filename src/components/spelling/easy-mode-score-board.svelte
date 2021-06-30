@@ -77,16 +77,16 @@
 		<ScoreSVG color="#ED7182"/>
 	</div>
 	<div class="font-bold border-4 px-8 pt-12 pb-4 border-red-500 text-center" style="border-radius: 3em; background: #FAFAFA">
-		<div class="grid grid-cols-2 gap-4 mb-4">
+		<div class="flex">
 			<div>
 				<div bind:this={alphabet_score_el}>
 					<AlphabetScore stroke_color="#ED7182" text_color="#FFF8E5" score={derived_score}/>
 				</div>
 			</div>
-			<div>
+			<div class="ml-4">
 				<div class="flex items-center mb-2">
 					<div class="h-8 w-8 flex-shrink-0 items-center justify-center flex bg-center bg-contain bg-no-repeat" style="background-image: url('/image/spelling/heart.png')"></div>
-					<div class="ml-2 flex">
+					<div class="ml-2 flex mr-4">
 						{#each [0,1,2,3,4,5] as i}
 							<div bind:this={heart_score_point_els[i]} style="border-color: #F892C6" class="h-5 w-2.5 bg-white border-2 mx-0.5 rounded-sm"></div>
 						{/each}
@@ -102,9 +102,9 @@
 				</div>
 			</div>
 		</div>
-		<div bind:this={button_row_el} class="grid gap-4 grid-cols-2 text-xl">
+		<div bind:this={button_row_el} class="flex text-xl justify-center">
 			<button on:click={restartEasy} class="bg-white text-red-500 border-red-500 border-2 px-8 py-4 rounded-full font-bold">再玩</button>
-			<button on:click={restartNormal} class="bg-red-500 text-white px-4 py-4 rounded-full font-bold">下一關</button>
+			<button on:click={restartNormal} class="bg-red-500 text-white px-8 py-4 rounded-full font-bold ml-4">下一關</button>
 		</div>
 	</div>
 </div>

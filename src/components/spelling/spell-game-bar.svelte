@@ -260,9 +260,9 @@
 <div bind:this={dialog_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 	<div class="font-bold bg-white border-4 p-12 border-red-500 text-center" style="border-radius: 3em">
 		<p class="mb-6 text-2xl">Quit?</p>
-		<div class="grid gap-4 grid-cols-2">
+		<div class="flex">
 			<button on:click={closeExitDialog} class="bg-white text-red-500 border-red-500 border-4 px-8 py-2 rounded-full">NO</button>
-			<button on:click={confirmExit} class="bg-red-500 text-white px-8 py-2 rounded-full">YES</button>
+			<button on:click={confirmExit} class="bg-red-500 text-white px-8 py-2 rounded-full ml-4">YES</button>
 		</div>
 	</div>
 </div>

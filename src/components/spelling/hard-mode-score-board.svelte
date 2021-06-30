@@ -134,7 +134,7 @@
 	<div class="relative z-10 flex justify-center -mb-6">
 		<ScoreSVG color="#918CF0"/>
 	</div>
-	<div class="relative font-bold border-4 px-8 pt-12 pb-4 border-purple-500 text-center" style="border-radius: 3em; background: #FAFAFA">
+	<div class="relative font-bold border-4 px-8 pt-12 pb-4 border-purple-500 text-center" style="border-radius: 3em; background: #DFDEF7">
 		<div class="mb-4 relative h-20">
 			{#each question_result as r, i}
 				<div bind:this={review_words_el[i]} class="absolute inset-0 flex items-center justify-center">
@@ -145,16 +145,16 @@
 				<AlphabetScore score={derived_score}/>
 			</div>
 		</div>
-		<div class="grid gap-4 grid-cols-2 text-xl" bind:this={button_row_el}>
-			<button on:click={restartEasy} class="bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">訓練</button>
-			<button on:click={restartNormal} class="bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold" style="color: #F69CCA; background: #535AAB">再挑戰</button>
+		<div class="flex justify-center text-xl" bind:this={button_row_el}>
+			<button on:click={restartEasy} class="whitespace-nowrap bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">訓練</button>
+			<button on:click={restartNormal} class="whitespace-nowrap bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold ml-4" style="color: #F69CCA; background: #535AAB">再挑戰</button>
 		</div>
-		<div class="absolute top-4 right-4 flex items-center">
+		<div class="absolute top-8 right-4 flex items-center">
 			<div bind:this={score_el}>
-				<Alphabet char={score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>
+				<Alphabet char={score} height_class="h-8" text_color="white" stroke_color="#918CF0"/>
 			</div>
-			<Alphabet char="/" height_class="h-4" text_color="white" stroke_color="#918CF0"/>
-			<Alphabet char={total_score} height_class="h-6" text_color="white" stroke_color="#918CF0"/>
+			<Alphabet char="/" height_class="h-6" text_color="white" stroke_color="#918CF0"/>
+			<Alphabet char={total_score} height_class="h-8" text_color="white" stroke_color="#918CF0"/>
 		</div>
 	</div>
 </div>
