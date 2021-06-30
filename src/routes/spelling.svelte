@@ -59,6 +59,10 @@
 	}
 
 	onMount(async () => {
+		document.addEventListener('message', (e) => {
+			let data = JSON.parse(e.data)
+			alert('ok! ' + data.type)
+		})
 		gsap.set([right_button, left_card], {
 			opacity: 0
 		})
