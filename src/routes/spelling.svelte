@@ -59,22 +59,16 @@
 	}
 
 	onMount(async () => {
-		document.addEventListener('message', (e) => {
-			let data = JSON.parse(e.data)
-			alert('ok! ' + data.type)
-		})
 		gsap.set([right_button, left_card], {
 			opacity: 0
 		})
-		setTimeout(() => {
-			introAnimation()
-		}, 100)
-		phases = $page.query.words
-		if (!(phases && phases.length)) return console.log('nothing from query')
-		else phases = JSON.parse(decodeURIComponent(phases))
-		convertData()
-		await loadAudio()
-		// selected_mode = 'normal'
+		document.addEventListener('message', (e) => {
+			const data = JSON.parse(e.data)
+			phases = data.data
+			setTimeout(introAnimation, 100)
+			convertData()
+			loadAudio()
+		})
 	})
 
 	const introAnimation = () => {
