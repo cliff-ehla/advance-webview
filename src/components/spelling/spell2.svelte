@@ -442,13 +442,16 @@
 		let chars_on_stage = getStageChars().map(el => el.getAttribute('data-char'))
 		required_unoccupied_char = required_unoccupied_char.filter(char => !chars_on_stage.includes(char))
 		let bench_el = getBenchChars()
-		let required_unoccupied_el = required_unoccupied_char.map(char => bench_el.find(el => el.getAttribute("data-char") === char))
-
-		const other_remaining_bench_el = bench_el.filter(el => !required_unoccupied_el.includes(el))
+		let required_unoccupied_el = []
+		 required_unoccupied_char.forEach(char => {
+			 let idx = bench_el.findIndex(el => el.getAttribute("data-char") === char)
+			 let _el = bench_el.splice(idx, 1)
+			 required_unoccupied_el.push(_el[0])
+		})
 		let empty_stage_count = getEmptyStageCount()
 		let essential_char_count = required_unoccupied_char.length
 		let random_select_count = empty_stage_count - essential_char_count
-		const random_select_from_other = shuffle(other_remaining_bench_el).slice(0, random_select_count)
+		const random_select_from_other = shuffle(bench_el).slice(0, random_select_count)
 		return shuffle([...required_unoccupied_el, ...random_select_from_other])
 	}
 
