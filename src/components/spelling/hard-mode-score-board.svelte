@@ -46,12 +46,13 @@
 
 				const is_correct = question_result[i].result
 				if (is_correct) {
-					score++
-					gsap.to(score_el, {
+					gsap.timeline().to(score_el, {
 						scaleY: 0,
 						duration: 0.25,
-						yoyo: true,
-						repeat: 1
+						onComplete: () => {score++}
+					}).to(score_el, {
+						scaleY: 1,
+						duration: 0.25
 					})
 					gsap.to(review_words_el[i], {
 						autoAlpha: 0,
@@ -150,11 +151,15 @@
 			<button on:click={restartNormal} class="whitespace-nowrap bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold ml-4" style="color: #F69CCA; background: #535AAB">再挑戰</button>
 		</div>
 		<div class="absolute top-8 right-4 flex items-center">
-			<div bind:this={score_el}>
-				<Alphabet char={score} height_class="h-8" text_color="white" stroke_color="#918CF0"/>
+			<div bind:this={score_el} class="inline-flex">
+				{#each String(score).split('') as s}
+					<Alphabet char={s} height_class="h-8" text_color="white" stroke_color="#918CF0"/>
+				{/each}
 			</div>
 			<Alphabet char="/" height_class="h-6" text_color="white" stroke_color="#918CF0"/>
-			<Alphabet char={total_score} height_class="h-8" text_color="white" stroke_color="#918CF0"/>
+			{#each String(total_score).split('') as s}
+				<Alphabet char={s} height_class="h-8" text_color="white" stroke_color="#918CF0"/>
+			{/each}
 		</div>
 	</div>
 </div>

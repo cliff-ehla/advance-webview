@@ -69,6 +69,21 @@
 			convertData()
 			loadAudio()
 		})
+		if ($page.query.testing) {
+			phases = [
+				{
+					"id": "47491",
+					"word": "grandmother",
+					"description": "n. 太陽能",
+					"description_alter": "n. 太陽能",
+					"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-47cf16cec79dedf889fefd2d4645737e-1624248816.mp3",
+					"image_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202106/17/solarpower_1623903013650.jpg"
+				}
+			];
+			setTimeout(introAnimation, 100)
+			convertData()
+			loadAudio()
+		}
 	})
 
 	const introAnimation = () => {
