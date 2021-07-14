@@ -30,7 +30,7 @@
 	{:else if score === 2}
 		<Alphabet {text_color} {stroke_color} height_class="h-24" char="C"/>
 		<Alphabet {text_color} {stroke_color} height_class="h-24 -mt-2" char="-"/>
-	{:else if score === 1}
+	{:else if score <= 1}
 		<Alphabet {text_color} {stroke_color} height_class="h-24" char="D"/>
 	{/if}
 </div>

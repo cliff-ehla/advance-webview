@@ -38,7 +38,6 @@
 				word: s.word
 			}))
 		})
-		console.log(phases)
 	}
 
 	const loadAudio = async () => {

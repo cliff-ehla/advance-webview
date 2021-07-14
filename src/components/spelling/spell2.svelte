@@ -429,7 +429,6 @@
 	const getNextChar = () => {
 		let chars = words_2[word_index].all_chars
 		let unoccupied_idx = getUnoccupiedChainIdx()
-		// console.log('unoccupied_idx', unoccupied_idx)
 		let next_idx = unoccupied_idx[0]
 		return chars[next_idx]
 	}
@@ -662,10 +661,14 @@
 		return chain_els[word_index].map(el => el.getAttribute('data-step-status')).lastIndexOf('active')
 	}
 
+	const onPlayAudio = () => {
+		sound.stop(words_2[word_index].audio)
+		sound.play(words_2[word_index].audio)
+	}
+
 	const onKeydown = e => {
 		const code = e.keyCode
 		if (code === 37) { // left
-			// left()
 			hideChain(async () => {
 				setCheckpointFail(phase_idx)
 				nextPhase()
@@ -690,6 +693,7 @@
 				<div class="flex">
 					{#each w.all_chars as c, j}
 						<div bind:this={chain_els[i][j]}
+						     on:touchstart={onPlayAudio}
 						     data-step-status="inactive"
 						     style="width: {chain_char_width}px; background-color: {mode === 'easy' ? '#E6F7FF' : '#6BBAF9'}"
 						     class="char-box h-20 mr-0.5 flex items-center justify-center">
