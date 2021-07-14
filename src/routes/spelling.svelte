@@ -1,4 +1,5 @@
 <script>
+	import {t, locale} from 'svelte-i18n'
 	import SpellGameBar from '../components/spelling/spell-game-bar.svelte'
 	import {onMount, tick} from 'svelte'
 	import {sound} from "../components/spelling/Sound";
@@ -16,6 +17,7 @@
 	let right_button
 
 	let loaded_image_count = 0
+	let is_challenge_only = false
 
 	const convertData = () => {
 		phases.forEach(v => {
@@ -58,13 +60,17 @@
 	}
 
 	onMount(async () => {
-		gsap.set([right_button, left_card], {
-			opacity: 0
+		gsap.set([right_button, left_card, left_button, right_button], {
+			autoAlpha: 0
 		})
 		document.addEventListener('message', (e) => {
 			const data = JSON.parse(e.data)
-			phases = data.data
-			setTimeout(introAnimation, 100)
+			let {words, lang, challenge_only} = data
+			lang = lang || 'hk'
+			locale.set(lang)
+			phases = words
+			is_challenge_only = challenge_only
+			setTimeout(introAnimation, 500)
 			convertData()
 			loadAudio()
 		})
@@ -79,40 +85,63 @@
 					"image_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202106/17/solarpower_1623903013650.jpg"
 				}
 			];
-			setTimeout(introAnimation, 100)
+			setTimeout(introAnimation, 200)
 			convertData()
 			loadAudio()
 		}
 	})
 
 	const introAnimation = () => {
-		gsap.timeline().to(left_card, {
+		gsap.set(left_card, {
+			transformOrigin: 'left bottom'
+		})
+		gsap.set(right_card, {
+			transformOrigin: 'right bottom'
+		})
+		gsap.set([left_button, right_button], {
+			x: '-=50%'
+		})
+		gsap.timeline().fromTo(left_card, {
+			rotate: -70,
+			scale: 0.7
+		}, {
 			rotate: -8,
-			duration: 0.3,
-			opacity: 1,
+			scale: 1,
+			duration: 0.5,
+			autoAlpha: is_challenge_only ? 0.85 : 1,
 			ease: 'back.out'
-		}).to(right_card, {
-			rotate: 8,
-			duration: 0.3,
-			opacity: 1,
-			ease: 'back.out'
-		}).fromTo([left_button, right_button], {
-			y: "+=30"
+		}).fromTo(left_button, {
+			y: "+=30",
 		}, {
 			y: "-=30",
 			duration: 0.5,
-			opacity: 1,
+			autoAlpha: is_challenge_only ? 0.7: 1
+		}, ">-0.3").fromTo(right_card, {
+			rotate: 50,
+			scale: 0.8
+		}, {
+			rotate: 10,
+			scale: 1,
+			duration: 0.5,
+			autoAlpha: 1,
 			ease: 'back.out'
-		})
+		}, ">-0.5").fromTo(right_button, {
+			y: "+=30",
+		}, {
+			y: 0,
+			duration: 0.5,
+			autoAlpha: 1
+		}, ">-0.3")
 	}
 
 	const onImageLoad = () => {
 		loaded_image_count++
 		if (loaded_image_count === 4) {
-			setTimeout(() => {
-				introAnimation()
-				console.log('intro animation after loaded image')
-			}, 50)
+			console.log('all image loaded')
+			// setTimeout(() => {
+			// 	introAnimation()
+			// 	console.log('intro animation after loaded image')
+			// }, 50)
 		}
 	}
 
@@ -136,13 +165,14 @@
 	}
 
 	const onSelect = (mode) => {
+		if (is_challenge_only && mode === 'easy') return sound.play('wrong-electricity-buzz')
 		selected_mode = mode
 		sound.play('casino-notification')
 	}
 </script>
 
 {#if selected_mode}
-	<SpellGameBar on:restart-easy={() => restart('easy')} on:restart-normal={() => restart('normal')} on:exit={onExit} phases={phases} mode={selected_mode}/>
+	<SpellGameBar on:restart-easy={() => restart('easy')} on:restart-normal={() => restart('normal')} on:exit={onExit} phases={phases} mode={selected_mode} {is_challenge_only}/>
 {:else}
 	<svg on:click={onBack} class="z-30 fixed left-4 top-4 w-10" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M22.6213 8.12132C23.7929 6.94975 23.7929 5.05025 22.6213 3.87868C21.4497 2.70711 19.5503 2.70711 18.3787 3.87868L3.87868 18.3787C2.72112 19.5362 2.70526 21.4081 3.84304 22.5851L18.343 37.5851C19.4946 38.7763 21.3938 38.8085 22.5851 37.657C23.7763 36.5054 23.8085 34.6062 22.657 33.4149L13.5559 24H35.5C37.1569 24 38.5 22.6569 38.5 21C38.5 19.3431 37.1569 18 35.5 18H12.7426L22.6213 8.12132Z" fill="white"/>
@@ -151,12 +181,16 @@
 	<div class="relative w-screen h-screen flex items-center justify-center px-12" style="background-image: linear-gradient(#FDFFE8,#FBFFCA)">
 		<div class="relative z-10 grid gap-8 grid-cols-2">
 			<div on:touchstart={() => {onSelect('easy')}} class="relative flex justify-center">
-				<div bind:this={left_card} class="w-64 opacity-0 bg-contain bg-no-repeat" style="background-image: url('image/spelling/easy-card.png'); padding-top: 120%"></div>
-				<img on:load={onImageLoad} bind:this={left_button} src="image/spelling/easy-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-12 opacity-0">
+				{#if is_challenge_only}
+					<div bind:this={left_card} class="gray-scale w-64 opacity-0 bg-contain bg-no-repeat" style="background-image: url('image/spelling/easy-card-disabled.png'); padding-top: 120%"></div>
+				{:else}
+					<div bind:this={left_card} class="w-64 opacity-0 bg-contain bg-no-repeat" style="background-image: url('image/spelling/easy-card.png'); padding-top: 120%"></div>
+				{/if}
+				<img on:load={onImageLoad} bind:this={left_button} src="image/spelling/easy-button-{$locale}.png" alt="card" class="absolute -bottom-4 left-1/2 h-16 opacity-0" class:gray-scale={is_challenge_only}>
 			</div>
 			<div on:touchstart={() => {onSelect('normal')}} class="relative flex justify-center">
 				<div bind:this={right_card} class="w-64 opacity-0 bg-contain bg-no-repeat" style="background-image: url('image/spelling/hard-card.png'); padding-top: 120%"></div>
-				<img on:load={onImageLoad} bind:this={right_button} src="image/spelling/hard-button.png" alt="card" class="absolute -bottom-4 left-1/2 w-32 -ml-20 opacity-0">
+				<img on:load={onImageLoad} bind:this={right_button} src="image/spelling/hard-button-{$locale}.png" alt="card" class="absolute -bottom-4 left-1/2 h-16 opacity-0">
 			</div>
 		</div>
 		<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 375" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -169,3 +203,8 @@
 	</div>
 {/if}
 
+<style>
+	.gray-scale {
+			filter: grayscale(100%);
+	}
+</style>

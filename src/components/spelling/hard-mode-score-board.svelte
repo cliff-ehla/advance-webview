@@ -1,6 +1,8 @@
 <script>
 	export let question_result
+	export let is_challenge_only
 
+	import {t} from 'svelte-i18n'
 	import gsap from 'gsap'
 	import {sound} from './Sound'
 	import {createEventDispatcher, onMount} from 'svelte'
@@ -109,11 +111,9 @@
 	}
 
 	onMount(() => {
-		console.log(question_result)
 		gsap.set([alphabet_score_el, button_row_el, ...review_words_el], {
 			autoAlpha: 0
 		})
-		// sound.play('bonus-extra')
 		gsap.timeline().fromTo(panel_el, {
 			y: "+=100",
 			scale: 0
@@ -128,9 +128,16 @@
 			}
 		})
 	})
+
+	const onBack = () => {
+		const message = {
+			type: 'exit'
+		}
+		window.postMessage(JSON.stringify(message))
+	}
 </script>
 
-<div bind:this={panel_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+<div bind:this={panel_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style="min-width: 20em">
 	<div class="relative z-10 flex justify-center -mb-6">
 		<ScoreSVG color="#918CF0"/>
 	</div>
@@ -146,8 +153,12 @@
 			</div>
 		</div>
 		<div class="flex justify-center text-xl" bind:this={button_row_el}>
-			<button on:click={restartEasy} class="whitespace-nowrap bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">訓練</button>
-			<button on:click={restartNormal} class="whitespace-nowrap bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold ml-4" style="color: #F69CCA; background: #535AAB">再挑戰</button>
+			{#if is_challenge_only}
+				<button on:click={onBack} class="whitespace-nowrap bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold ml-4" style="color: #F69CCA; background: #535AAB">{$t('quit')}</button>
+			{:else}
+				<button on:click={restartEasy} class="whitespace-nowrap bg-white text-purple-500 border-purple-500 border-2 px-8 py-4 rounded-full font-bold">{$t('practise_mode')}</button>
+				<button on:click={restartNormal} class="whitespace-nowrap bg-purple-700 border-purple-500 border-4 text-white px-8 whitespace-nowrap py-4 rounded-full font-bold ml-4" style="color: #F69CCA; background: #535AAB">{$t('retry')}</button>
+			{/if}
 		</div>
 		<div class="absolute top-8 right-4 flex items-center">
 			<div bind:this={score_el} class="inline-flex">

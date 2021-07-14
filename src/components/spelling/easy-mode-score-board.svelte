@@ -3,6 +3,7 @@
 	export let max_combo
 	export let total_char_count
 
+	import {t} from 'svelte-i18n'
 	import ScoreSVG from './score-svg.svelte'
 	import AlphabetScore from './alphabet-score.svelte'
 	import {createEventDispatcher, onMount} from 'svelte'
@@ -115,8 +116,8 @@
 			</div>
 		</div>
 		<div bind:this={button_row_el} class="flex text-xl justify-center">
-			<button on:click={restartEasy} class="bg-white text-red-500 border-red-500 border-2 px-8 py-4 rounded-full font-bold">再玩</button>
-			<button on:click={restartNormal} class="bg-red-500 text-white px-8 py-4 rounded-full font-bold ml-4">下一關</button>
+			<button on:click={restartEasy} class="bg-white text-red-500 border-red-500 border-2 px-8 py-4 rounded-full font-bold">{$t('retry')}</button>
+			<button on:click={restartNormal} class="bg-red-500 text-white px-8 py-4 rounded-full font-bold ml-4">{$t('challenge_mode')}</button>
 		</div>
 	</div>
 </div>

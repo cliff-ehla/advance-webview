@@ -1,4 +1,5 @@
 <script>
+	import {t} from 'svelte-i18n'
 	import {onMount, setContext, createEventDispatcher} from 'svelte'
 	import gsap from 'gsap'
 	import Icon from '../icon.svelte'
@@ -10,6 +11,7 @@
 	import Alphabet from './alphabet.svelte'
 
 	export let mode
+	export let is_challenge_only = false
 	export let hp_count = 6
 	export let phases
 	const question_count = phases.length
@@ -291,10 +293,10 @@
 
 <div bind:this={dialog_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 	<div class="font-bold bg-white border-4 p-12 border-red-500 text-center" style="border-radius: 3em">
-		<p class="mb-6 text-2xl">Quit?</p>
+		<p class="mb-6 text-2xl">{$t('quit?')}</p>
 		<div class="flex">
-			<button on:click={closeExitDialog} class="bg-white text-red-500 border-red-500 border-4 px-8 py-2 rounded-full">NO</button>
-			<button on:click={confirmExit} class="bg-red-500 text-white px-8 py-2 rounded-full ml-4">YES</button>
+			<button on:click={closeExitDialog} class="bg-white text-red-500 border-red-500 border-4 px-8 py-2 rounded-full uppercase">{$t('no')}</button>
+			<button on:click={confirmExit} class="bg-red-500 text-white px-8 py-2 rounded-full ml-4 uppercase">{$t('yes')}</button>
 		</div>
 	</div>
 </div>
@@ -361,7 +363,7 @@
 			{#if mode === 'easy'}
 				<EasyModeScoreBoard heart_left={hp} {max_combo} {total_char_count} on:restart-easy on:restart-normal/>
 			{:else if mode === 'normal'}
-				<HardModeScoreBoard {question_result} on:restart-easy on:restart-normal/>
+				<HardModeScoreBoard {question_result} on:restart-easy on:restart-normal {is_challenge_only}/>
 			{/if}
 		{:else if game_overed}
 			<GameOverDialog on:restart-easy/>
