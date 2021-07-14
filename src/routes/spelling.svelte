@@ -193,7 +193,7 @@
 				<img on:load={onImageLoad} bind:this={right_button} src="image/spelling/hard-button-{$locale}.png" alt="card" class="absolute -bottom-4 left-1/2 h-16 opacity-0">
 			</div>
 		</div>
-		<svg class="absolute bottom-0 inset-x-0" viewBox="0 0 667 375" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg class="absolute bottom-0 inset-x-0 w-full" viewBox="0 0 667 375" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<ellipse cx="152.5" cy="387.5" rx="365.5" ry="323.5" fill="#F0F4C5"/>
 			<ellipse cx="634.5" cy="315.5" rx="365.5" ry="323.5" fill="#F5F8D8"/>
 			<ellipse cx="585.5" cy="387.5" rx="365.5" ry="323.5" fill="#FDFFE8"/>
