@@ -20,10 +20,6 @@
 	$: heart_points = heart_left
 	$: derived_score = Math.ceil((heart_points + combo_points) / 2 / 6 * 10)
 
-	$: {
-		console.log(max_combo, total_char_count, combo_points, derived_score)
-	}
-
 	const restartEasy = () => {
 		dispatch('restart-easy')
 		sound.play('casino-notification')

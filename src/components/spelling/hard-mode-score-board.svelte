@@ -20,7 +20,6 @@
 
 	$: total_score = question_result.length
 	$: derived_score = Math.ceil(score / total_score * 10)
-	$: {console.log(question_result, total_score, score)}
 
 	const restartEasy = () => {
 		dispatch('restart-easy')
