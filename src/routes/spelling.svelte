@@ -65,7 +65,7 @@
 		})
 		document.addEventListener('message', (e) => {
 			const data = JSON.parse(e.data)
-			let {words, lang, challenge_only} = data
+			let {words, lang, challenge_only} = data.data
 			lang = lang || 'hk'
 			locale.set(lang)
 			phases = words
@@ -75,16 +75,14 @@
 			loadAudio()
 		})
 		if ($page.query.testing) {
-			phases = [
-				{
-					"id": "47491",
-					"word": "grandmother",
-					"description": "n. 太陽能",
-					"description_alter": "n. 太陽能",
-					"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-47cf16cec79dedf889fefd2d4645737e-1624248816.mp3",
-					"image_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202106/17/solarpower_1623903013650.jpg"
-				}
-			];
+			phases =  [{
+				"id": "4691",
+				"word": "run",
+				"description": "Vi. 跑；趕緊做某人喜歡的事；跑步 /Vt. 跑；參加 /n. 跑；跑步的時間；把. . . 打得無招架之力；助跑；助跑距離",
+				"description_alter": "Vi. 跑；趕緊做某人喜歡的事；跑步 /Vt. 跑；參加 /n. 跑；跑步的時間；把. . . 打得無招架之力；助跑；助跑距離",
+				"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/08/4691run_1578469620322.mp3",
+				"image_path": "https://ehla-media-bucket.s3.amazonaws.com/images/wordimage-1559028465621-run-1554362793597copy-1554686505210.jpg"
+			}]
 			setTimeout(introAnimation, 200)
 			convertData()
 			loadAudio()
