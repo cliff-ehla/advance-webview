@@ -549,7 +549,9 @@
 			y: 0
 		})
 
-		flash_watermark_hints(getAllChainEls(), getWatermarkChars(), animation_duration / getAllChainEls().length * 0.95)
+		if (mode === 'easy') {
+			flash_watermark_hints(getAllChainEls(), getWatermarkChars(), animation_duration / getAllChainEls().length * 0.95)
+		}
 
 		setTimeout(() => {
 			sound.play(phase_audio)
