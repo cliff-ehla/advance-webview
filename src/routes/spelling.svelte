@@ -77,7 +77,7 @@
 		if ($page.query.testing) {
 			phases =  [{
 				"id": "4691",
-				"word": "run",
+				"word": "grandmother",
 				"description": "Vi. 跑；趕緊做某人喜歡的事；跑步 /Vt. 跑；參加 /n. 跑；跑步的時間；把. . . 打得無招架之力；助跑；助跑距離",
 				"description_alter": "Vi. 跑；趕緊做某人喜歡的事；跑步 /Vt. 跑；參加 /n. 跑；跑步的時間；把. . . 打得無招架之力；助跑；助跑距離",
 				"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/08/4691run_1578469620322.mp3",

@@ -27,6 +27,7 @@
 	let chain_char_width
 	let user_know_how_to_backspace = false
 	let chain_broken = false
+	let lock_chain_char_click = false
 
 	const moveCharTo = (el, target_el, cb) => {
 		const {x, y} = getDiff2(el, target_el)
@@ -116,11 +117,28 @@
 				}
 			})
 		} else if (location === 'chain' && !verified) {
+			if (lock_chain_char_click) return
 			user_know_how_to_backspace = true
 			sound.play('stone-hit')
-			moveToStage(e.target, pickRandom(getEmptyStageIdx()), () => {
-				updateCharIdx()
-			})
+			const no_empty_space = getEmptyStageIdx().length === 0
+			if (no_empty_space) {
+				lock_chain_char_click = true
+				getStageChars().forEach(el => {
+					moveToBench(el)
+				})
+				moveToStage(e.target, pickRandom(getEmptyStageIdx()), () => {
+					updateCharIdx()
+				})
+				setTimeout(() => {
+					prepareStage(() => {
+						lock_chain_char_click = false
+					})
+				}, 300)
+			} else {
+				moveToStage(e.target, pickRandom(getEmptyStageIdx()), () => {
+					updateCharIdx()
+				})
+			}
 		}
 	}
 
@@ -241,6 +259,7 @@
 
 	const popupBubble = stage_idx => {
 		const bubble_el = stage_char_box_els[stage_idx]
+		gsap.killTweensOf(bubble_el)
 		gsap.to(bubble_el, {
 			autoAlpha: 1,
 			scale: 1,
