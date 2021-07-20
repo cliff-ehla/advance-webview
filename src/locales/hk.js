@@ -5,5 +5,6 @@ export default {
 	'quit?': '退出?',
 	quit: '退出',
 	yes: '是',
-	no: '否'
+	no: '否',
+	skip: 'Skip'
 }

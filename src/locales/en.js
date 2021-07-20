@@ -5,5 +5,6 @@ export default {
 	'quit?': 'Quit?',
 	quit: 'Quit',
 	yes: 'Yes',
-	no: 'No'
+	no: 'No',
+	skip: '略過'
 }

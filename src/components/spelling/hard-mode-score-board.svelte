@@ -19,6 +19,8 @@
 	let review_words_el = []
 	let reviewed_word_count = 0
 	let score = 0
+	let fast_forward = false
+	let hide_skip_button = false
 
 	$: total_score = question_result.length
 	$: derived_score = Math.ceil(score / total_score * 10)
@@ -43,23 +45,24 @@
 			autoAlpha: 1,
 			duration: 0.6,
 			onComplete: async () => {
-				await sound.play(question_result[i].audio_path)
+				if (!fast_forward) await sound.play(question_result[i].audio_path)
 
 				const is_correct = question_result[i].result
 				if (is_correct) {
 					gsap.timeline().to(score_el, {
 						scaleY: 0,
-						duration: 0.25,
+						duration: !fast_forward ? 0.25 : 0.1,
 						onComplete: () => {score++}
 					}).to(score_el, {
 						scaleY: 1,
-						duration: 0.25
+						duration: !fast_forward ? 0.25 : 0.1
 					})
 					gsap.to(review_words_el[i], {
 						autoAlpha: 0,
-						duration: 0.5
+						duration: !fast_forward ? 0.5 : 0.2
 					})
-					await sound.play('extra-bonus')
+					if (!fast_forward) await sound.play('extra-bonus')
+					else sound.play('extra-bonus')
 				} else {
 					gsap.to(review_words_el, {
 						autoAlpha: 0,
@@ -78,7 +81,8 @@
 						rotate: "+=15",
 						duration: 0.15
 					})
-					await sound.play('wrong-electricity-buzz')
+					if (!fast_forward) await sound.play('wrong-electricity-buzz')
+					else sound.play('wrong-electricity-buzz')
 				}
 				reviewed_word_count++
 				if (reviewed_word_count < question_result.length) {
@@ -91,6 +95,7 @@
 	}
 
 	const onReviewWordComplete = () => {
+		hide_skip_button = true
 		gsap.timeline().fromTo(alphabet_score_el, {
 			rotate: "-=30"
 		}, {
@@ -135,6 +140,12 @@
 		}
 		window.postMessage(JSON.stringify(message))
 	}
+
+	const onSkipClick = () => {
+		sound.play('ball-tap')
+		hide_skip_button = true
+		fast_forward = true
+	}
 </script>
 
 <div bind:this={panel_el} class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style="min-width: 20em">
@@ -171,5 +182,10 @@
 				<Alphabet char={s} height_class="h-8" text_color="white" stroke_color="#918CF0"/>
 			{/each}
 		</div>
+		{#if !hide_skip_button}
+			<button on:click={onSkipClick} class="absolute right-4 bottom-4 text-purple-500 font-bold text-xl">
+				{$t('skip')}
+			</button>
+		{/if}
 	</div>
 </div>
