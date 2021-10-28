@@ -213,7 +213,10 @@
 			} else {
 				selected_bench_el = bench_chars.find(el => el.getAttribute("data-char") === next_char) || pickRandom(bench_chars)
 			}
-			if (!selected_bench_el) return console.warn(`addNextBenchCharToStage: cannot find ${next_char} from bench`)
+			if (!selected_bench_el) {
+				debug(`addNextBenchCharToStage: cannot find ${next_char} from bench`)
+				return console.warn(`addNextBenchCharToStage: cannot find ${next_char} from bench`)
+			}
 			moveToStage(selected_bench_el, pickRandom(empty_stage_idx_list))
 		}
 	}
@@ -308,7 +311,6 @@
 	}
 
 	const moveToChain = (el, cb) => {
-		// console.log('move to chain',  char_index, getCurrentStepLastIdx())
 		if (mode === 'easy' && char_index > getCurrentStepLastIdx()) return
 		sound.play('ball-tap')
 		const is_correct = verifyChar(el.getAttribute('data-char'))
@@ -332,6 +334,9 @@
 		move the char from bench to stage (main area)
 	 */
 	const moveToStage = (el, stage_idx, cb) => {
+		if (!el) {
+			debug(`moveToStage: el is undefined, stage idx: ${stage_idx}. There will be an empty bubble`)
+		}
 		moveCharTo(el, stage_char_box_els[stage_idx], cb)
 		el.setAttribute('data-stage-idx', stage_idx)
 		el.setAttribute('data-chain-idx', -1)
@@ -358,6 +363,9 @@
 			setTimeout(() => {
 				if (!mute) sound.play('tap')
 				let target_idx = pickRandom(getEmptyStageIdx())
+				if (!el) {
+					debug(`prepareStage: el is undefined, word_char_els: ${word_char_els}`)
+				}
 				moveToStage(el, target_idx, () => {
 					if (i === word_char_els.length - 1) {
 						if (cb) cb()
@@ -458,7 +466,12 @@
 		let required_unoccupied_idx = unoccupied_idx.length > 3 ? unoccupied_idx.slice(0,3) : unoccupied_idx
 		let required_unoccupied_char = required_unoccupied_idx.map(i => chars[i])
 		let chars_on_stage = getStageChars().map(el => el.getAttribute('data-char'))
-		required_unoccupied_char = required_unoccupied_char.filter(char => !chars_on_stage.includes(char))
+		chars_on_stage.forEach(c => {
+			let idx = required_unoccupied_char.indexOf(c)
+			if (idx >= 0) {
+				required_unoccupied_char.splice(required_unoccupied_char.indexOf(c), 1)
+			}
+		})
 		let bench_el = getBenchChars()
 		let required_unoccupied_el = []
 		 required_unoccupied_char.forEach(char => {
@@ -470,7 +483,17 @@
 		let essential_char_count = required_unoccupied_char.length
 		let random_select_count = empty_stage_count - essential_char_count
 		const random_select_from_other = shuffle(bench_el).slice(0, random_select_count)
-		return shuffle([...required_unoccupied_el, ...random_select_from_other])
+		const elements = [...required_unoccupied_el, ...random_select_from_other]
+		if (!elements.every(el => !!el)) {
+			debug(`getEssentialCharElFromBench: does not contain element:
+			bench_el ${bench_el}
+			required_unoccupied_char ${required_unoccupied_char}
+			required_unoccupied_el ${required_unoccupied_el}
+			random_select_count ${random_select_count}
+			random_select_from_other ${random_select_from_other}
+			`)
+		}
+		return shuffle(elements)
 	}
 
 	const setCharBoxWidth = () => {
@@ -479,6 +502,7 @@
 	}
 
 	onMount(async () => {
+		debug('testing hehe')
 		words.forEach(w => {
 			const all_chars = w.word.split('')
 			words_2.push({
@@ -558,7 +582,7 @@
 							})
 						} else {
 							highlightSteps()
-							prepareStage(null, {mute: true})
+							prepareStage()
 						}
 					}
 				})
@@ -700,6 +724,14 @@
 			dispatch('game-over')
 		} else if (code === 40) { // down
 		}
+	}
+
+	const debug = (msg) => {
+		const message = {
+			type: 'error',
+			data: msg
+		}
+		window.postMessage(JSON.stringify(message))
 	}
 </script>
 

@@ -75,14 +75,35 @@
 			loadAudio()
 		})
 		if ($page.query.testing) {
-			phases =  [{
-				"id": "4691",
-				"word": "Island",
-				"description": "Vi. 跑；趕緊做某人喜歡的事；跑步 /Vt. 跑；參加 /n. 跑；跑步的時間；把. . . 打得無招架之力；助跑；助跑距離",
-				"description_alter": "Vi. 跑；趕緊做某人喜歡的事；跑步 /Vt. 跑；參加 /n. 跑；跑步的時間；把. . . 打得無招架之力；助跑；助跑距離",
-				"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/cms/audios/202001/08/4691run_1578469620322.mp3",
-				"image_path": "https://ehla-media-bucket.s3.amazonaws.com/images/wordimage-1559028465621-run-1554362793597copy-1554686505210.jpg"
-			}]
+			phases =  [
+				{
+					"id": "43220",
+					"word": "schoolwork",
+					"description": null,
+					"description_alter": null,
+					"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/ehlapolly/37/2246/Amy-standard-5f1ff692285872c0bc30c251527aab7a-1622702176.mp3",
+					"image_path": "https://ehla-media-bucket.s3.amazonaws.com/assets/vocab_image/vocabulary.png",
+					"subwords": [{
+						"word": "schoolwork",
+						"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/word_audio_20190429/striped-1560754496808.mp3"
+					}]
+				},
+				{
+					"id": "43220",
+					"word": "striped jumper",
+					"description": null,
+					"description_alter": null,
+					"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/ehlapolly/37/2246/Amy-standard-5f1ff692285872c0bc30c251527aab7a-1622702176.mp3",
+					"image_path": "https://ehla-media-bucket.s3.amazonaws.com/assets/vocab_image/vocabulary.png",
+					"subwords": [{
+						"word": "striped",
+						"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/word_audio_20190429/striped-1560754496808.mp3"
+					}, {
+						"word": "jumper",
+						"audio_path": "https://ehla-media-bucket.s3.amazonaws.com/word_audio_20190429/jumper-1559633903326.mp3"
+					}]
+				}
+			]
 			setTimeout(introAnimation, 200)
 			convertData()
 			loadAudio()
