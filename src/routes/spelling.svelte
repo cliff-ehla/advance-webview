@@ -1,4 +1,6 @@
 <script>
+	import * as Sentry from "@sentry/browser";
+	import { BrowserTracing } from "@sentry/tracing";
 	import {t, locale} from 'svelte-i18n'
 	import SpellGameBar from '../components/spelling/spell-game-bar.svelte'
 	import {onMount, tick} from 'svelte'
@@ -60,6 +62,16 @@
 	}
 
 	onMount(async () => {
+		Sentry.init({
+			dsn: "https://2ed4bf4c5e744b61821fa3fb47dd84db@o1067583.ingest.sentry.io/4504287052431360",
+			integrations: [new BrowserTracing()],
+
+			// Set tracesSampleRate to 1.0 to capture 100%
+			// of transactions for performance monitoring.
+			// We recommend adjusting this value in production
+			tracesSampleRate: 1.0,
+		});
+
 		gsap.set([right_button, left_card, left_button, right_button], {
 			autoAlpha: 0
 		})

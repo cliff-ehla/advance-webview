@@ -9,6 +9,8 @@
     "start": "node __sapper__/build"
   },
   "dependencies": {
+    "@sentry/browser": "^7.23.0",
+    "@sentry/tracing": "^7.23.0",
     "compression": "^1.7.1",
     "gsap": "^3.7.0",
     "polka": "next",
