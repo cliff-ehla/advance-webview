@@ -139,6 +139,9 @@
 			type: 'exit'
 		}
 		window.postMessage(JSON.stringify(message))
+		if (window.IS_WEB_VIEW) {
+			window.ReactNativeWebView.postMessage(JSON.stringify(message))
+		}
 	}
 
 	const onSkipClick = () => {
