@@ -140,7 +140,9 @@
 		}
 		window.postMessage(JSON.stringify(message))
 		if (window.IS_WEB_VIEW) {
-			window.ReactNativeWebView.postMessage(JSON.stringify(message))
+			try {
+				window.ReactNativeWebView.postMessage(JSON.stringify(message))
+			} catch (e) {}
 		}
 	}
 
