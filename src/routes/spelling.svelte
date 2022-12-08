@@ -75,7 +75,7 @@
 		gsap.set([right_button, left_card, left_button, right_button], {
 			autoAlpha: 0
 		})
-		document.addEventListener('message', (e) => {
+		const onMessage = (e) => {
 			const data = JSON.parse(e.data)
 			let {words, lang, challenge_only} = data.data
 			lang = lang || 'hk'
@@ -85,7 +85,12 @@
 			setTimeout(introAnimation, 500)
 			convertData()
 			loadAudio()
-		})
+		}
+		if (window.IS_IOS) {
+			window.addEventListener('message', onMessage)
+		} else {
+			document.addEventListener('message', onMessage)
+		}
 		if ($page.query.testing) {
 			phases =  [
 				{
