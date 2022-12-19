@@ -502,7 +502,6 @@
 	}
 
 	onMount(async () => {
-		debug('testing hehe')
 		words.forEach(w => {
 			const all_chars = w.word.split('')
 			words_2.push({
