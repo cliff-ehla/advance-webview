@@ -88,35 +88,11 @@
 			convertData()
 			loadAudio()
 		}
-		window.addEventListener('message', onMessage)
-		document.addEventListener('message', onMessage)
-
-		setTimeout(() => {
-			window.postMessage(JSON.stringify({
-				"type": "setData",
-				"data": {
-					"lang": "en",
-					"words": [{
-						"word_id": "57035",
-						"word": "apple",
-						"translation": "n. 蘋果；蘋果樹",
-						"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-1f3870be274f6c49b3e31a0c6728957f-1660052926.mp3",
-						"image_path": "https://ehla-media-bucket.s3.amazonaws.com/images/wordimage-1558324439638-apple.jpg"
-					}, {
-						"word_id": "57036",
-						"word": "man",
-						"translation": "v. 成年男子；男人",
-						"audio_path": "https://ehla-media-bucket.s3.ap-southeast-1.amazonaws.com/ehlapolly/advanced/Amy-standard-39c63ddb96a31b9610cd976b896ad4f0-1609141489.mp3",
-						"image_path": "https://ehla-media-bucket.s3.amazonaws.com/vocab/rectangle/man.jpg"
-					}]
-				}
-			}))
-		}, 2000)
-		// if (window.IS_IOS) {
-		// 	window.addEventListener('message', onMessage)
-		// } else {
-		// 	document.addEventListener('message', onMessage)
-		// }
+		if (window.IS_IOS) {
+			window.addEventListener('message', onMessage)
+		} else {
+			document.addEventListener('message', onMessage)
+		}
 		if ($page.query.testing) {
 			phases =  [
 				{
