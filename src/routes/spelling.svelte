@@ -87,11 +87,13 @@
 			convertData()
 			loadAudio()
 		}
-		if (window.IS_IOS) {
-			window.addEventListener('message', onMessage)
-		} else {
-			document.addEventListener('message', onMessage)
-		}
+		window.addEventListener('message', onMessage)
+		document.addEventListener('message', onMessage)
+		// if (window.IS_IOS) {
+		// 	window.addEventListener('message', onMessage)
+		// } else {
+		// 	document.addEventListener('message', onMessage)
+		// }
 		if ($page.query.testing) {
 			phases =  [
 				{
