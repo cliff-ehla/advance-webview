@@ -77,6 +77,7 @@
 		})
 		const onMessage = (e) => {
 			const data = JSON.parse(e.data)
+			console.log('onMessage', data)
 			let {words, lang, challenge_only} = data.data
 			lang = lang || 'hk'
 			locale.set(lang)
