@@ -42,6 +42,7 @@
 				word: s.word
 			}))
 		})
+		console.log('convert data: ', phases)
 	}
 
 	const loadAudio = async () => {
@@ -77,23 +78,22 @@
 		})
 		const onMessage = (e) => {
 			const data = JSON.parse(e.data)
-			console.log('onMessage2', data)
-			let {words, lang, challenge_only} = data.data
-			lang = lang || 'hk'
-			locale.set(lang)
-			phases = words
-			console.log('words', words)
-			is_challenge_only = challenge_only
-			setTimeout(introAnimation, 500)
-			convertData()
-			loadAudio()
+			let type = data.type
+			if (type === 'setData') {
+				let {words, lang, challenge_only} = data.data
+				lang = lang || 'hk'
+				locale.set(lang)
+				phases = words
+				is_challenge_only = challenge_only
+				setTimeout(introAnimation, 500)
+				convertData()
+				loadAudio()
+				console.log('set data', words)
+			}
 		}
-		if (window.IS_IOS) {
-			window.addEventListener('message', onMessage)
-		} else {
-			document.addEventListener('message', onMessage)
-		}
-		if ($page.query.testing) {
+		window.addEventListener('message', onMessage)
+		document.addEventListener('message', onMessage)
+		if ($page.query.testing2) {
 			phases =  [
 				{
 					"id": "43220",
